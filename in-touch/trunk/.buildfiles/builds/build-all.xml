@@ -9,7 +9,9 @@
 			<echo message=" " />
 			<echo message="Begin Building WHMCS Addon Module" />
 			<echo message="-----------------------------------------------------" />
-			
+		
+		<repl_module_file src=".buildfiles/builds/preamble.txt" destination="C:/xampp/preamble.txt" />
+		
 		<ioncube_dir />
 			
 			<echo message=" " />
