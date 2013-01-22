@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Packaging - WHMCS" basedir=".">
+	
+	<import file="../includes.xml" />
+	
+	<target name="package_whmcs" depends="properties">
+		
+		<fileset dir="${src.build}/" id="whmcsfiles">
+			<include name="**/*.*" />
+		</fileset>
+		
+		<echo message="[1]  Creating Package Temporary Directory" />
+		<mkdir dir="${dst.package}/WHMCS" />
+		<mkdir dir="${dst.package}/WHMCS" />
+		
+		<echo message=" " />
+		<echo message="[2]  Copying Build to Temporary Directory" />
+		<copy todir="${dst.package}/WHMCS">
+			<fileset refid="whmcsfiles" />
+		</copy>
+		
+		<fileset dir="${dst.package}/WHMCS" id="packagefiles">
+			<include name="**/*.*" />
+		</fileset>
+		
+		<echo message=" " />
+		<echo message="[3]  Creating Package" />
+		<zipr_file srcid="packagefiles" dest="/" file="whmcs_themer_v${project.VERSION}.zip" />
+		
+		<echo message=" " />
+		<echo message="[4]  Delete Temporary Directory" />
+		<delete dir="${dst.package}/WHMCS" />
+		
+	</target>
+	
+</project>
