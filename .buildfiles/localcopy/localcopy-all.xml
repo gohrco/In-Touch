@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Module: Copy All" basedir=".">
+	
+	<import file="../includes.xml" />
+	<import file="../../../Dunamis Framework/.buildfiles/dunamis.xml" />
+	
+	<!-- Include individual files now -->
+	<import file="whmcs.xml" />
+	
+	<target name="copy_all" depends="properties">
+			<echo message=" " />
+			<echo message="Begin Copying Dunamis Locally" />
+			<echo message="-----------------------------------------------------" />
+		<antcall target="copy_to_whmcs" />	
+			<echo message=" " />
+			<echo message="Completed Copying Dunamis Locally" />
+			<echo message="-----------------------------------------------------" />
+			<echo message=" " />
+			<echo message=" " />
+	</target>
+	
+</project>

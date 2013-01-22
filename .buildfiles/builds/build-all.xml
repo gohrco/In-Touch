@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Module:  Build All" basedir=".">
+	
+	<import file="../includes.xml" />
+	
+	<target name="build_all" depends="properties">
+			
+			<echo message=" " />
+			<echo message="Begin Building WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			
+		<ioncube_dir />
+			
+			<echo message=" " />
+			<echo message="Begin Building WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			<echo message=" " />
+			<echo message=" " />
+	</target> 
+	
+</project> 
