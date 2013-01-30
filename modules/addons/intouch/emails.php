@@ -242,6 +242,51 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	
 	
 	/**
+	 * In Admin of WHMCS we may be adding billable items which causes a problem
+	 * @access		private
+	 * @version		@fileVers@
+	 * 
+	 * @since		2.0.1
+	 */
+	private function _handleBillableitems()
+	{
+		$db		= dunloader( 'database', true );
+		$input	= dunloader( 'input', true );
+		$config = dunloader( 'config', 'intouch' );
+		
+		// We are wanting to add a billable item and invoice
+		if ( $input->getVar( 'billingaction', 0 ) != 3 ) return;
+		
+		// Grab our intended API User
+		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
+			$apiuser	= '1';
+		}
+		
+		// Grab the client
+		$db->setQuery( "SELECT c.id as `clientid`, c.defaultgateway as `gateway` FROM `tbltickets` t INNER JOIN `tblclients` c ON c.id = t.userid WHERE t.id = " . $db->Quote( $input->getVar( 'id' ) ) );
+		$pm = $db->loadObject();
+		$date	= date( 'Ymd' );
+		
+		$vars	= array(
+				'userid' => $pm->clientid,
+				'date'	=> $date,
+				'duedate' => $date,
+				'paymentmethod' => $pm->gateway,
+				'itemdescription1' => $input->getVar( 'billingdescription' ),
+				'itemamount1' => $input->getVar( 'billingamount' ),
+				'itemtaxed1' => false,
+				'sendinvoice' => true
+				);
+		
+		$result	= localAPI( 'createinvoice', $vars, $apiuser );
+		
+		$GLOBALS['billingdescription'] = null;
+		$GLOBALS['billingamount'] = 'Amount';
+		$GLOBALS['billingaction'] = 0;
+	}
+	
+	
+	/**
 	 * Method for sending our email out through their api
 	 * @access		private
 	 * @version		@fileVers@
@@ -315,6 +360,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	 * 				in just the original message being sent
 	 * @access		private
 	 * @version		@fileVers@
+	 * @version		2.0.1		- when creating invoice from support ticket WHMCS tries to reload invoice functionality
 	 * @param		object		- $email: contains the retrieved email object from the database
 	 * @param		array		- $vars: the variables passed to us by the hook originally
 	 * 
@@ -328,6 +374,13 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			global $message;
 			$regex	=	'#{\$ticket_message}#i';
 			$email->message	= preg_replace( $regex, nl2br( $message ), $email->message );
+			
+			// We have to catch billable items due to poor WHMCS programming
+			if ( is_admin() ) {
+				$this->_sendEmail( $email, $vars );
+				$this->_handleBillableitems();
+				return true;
+			}
 		}
 		
 		return $this->_sendEmail( $email, $vars );
