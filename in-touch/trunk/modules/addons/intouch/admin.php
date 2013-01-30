@@ -168,6 +168,14 @@ class IntouchAdminDunModule extends WhmcsDunModule
 	}
 	
 	
+	/**
+	 * Builds any modals that are set to the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		html formatted string
+	 * @since		2.0.0
+	 */
 	public function buildModals()
 	{
 		if ( empty( $this->modals ) ) return null;
@@ -292,6 +300,16 @@ HTML;
 	}
 	
 	
+	/**
+	 * Method for setting an alert to the object
+	 * @access		protected
+	 * @version		@fileVers@
+	 * @param		mixed		- $msg: contains an array of items to use for translate or an alert msg string
+	 * @param		string		- $type: indicates which type of alert to set to
+	 * @param		boolean		- $trans: indicates if we should translate (true default)
+	 * 
+	 * @since		2.0.0
+	 */
 	protected function setAlert( $msg = array(), $type = 'success', $trans = true )
 	{
 		// If we are passing an array we are assuming:
@@ -313,6 +331,20 @@ HTML;
 	}
 	
 	
+	/**
+	 * Method for setting a modal into place
+	 * @access		protected
+	 * @version		@fileVers@
+	 * @param		string		- $id: the id string of the modal
+	 * @param		string		- $title: the title to use
+	 * @param		string		- $header: the header of the modal
+	 * @param		string		- $body: content of the body
+	 * @param		string		- $href: the destination URL of the modal on success
+	 * @param		string		- $btnlbl: the label to use for the affirming action button
+	 * @param		string		- $type: the style of button to use (success|danger|etc)
+	 *
+	 * @since		2.0.0
+	 */
 	protected function setModal( $id, $title, $header, $body, $href, $btnlbl, $type = 'danger' )
 	{
 		$btns	= array(	'<button data-dismiss="modal" class="btn">' . t( 'intouch.form.close' ). '</button>',
