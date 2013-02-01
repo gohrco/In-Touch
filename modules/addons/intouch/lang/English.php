@@ -150,10 +150,11 @@ $lang['admin.form.config.info.invalidmsg']		= '<div class="alert alert-error">Th
 //	------------------------------------------------------------------------
 $lang['admin.form.config.label.enable']		= 'Enable';
 $lang['admin.form.config.label.apiuser']	= 'API User';
+$lang['admin.form.config.label.usewysiwyg'] = 'Use WYSIWYG';
 
 $lang['admin.form.config.desc.enable']		= 'This field actually enabled or disables the product globally.';
 $lang['admin.form.config.desc.apiuser']		= 'This field allows you to select which admin user to make system level calls to your local WHMCS.  This permits you to audit the system.';
-
+$lang['admin.form.config.desc.usewysiwyg']	= 'This field permits you to disable the use of the WYSIWYG editor on the groups page.';
 
 //	------------------------------------------------------------------------
 //	Groups Page
