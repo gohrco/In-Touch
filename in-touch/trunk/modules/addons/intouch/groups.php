@@ -162,8 +162,12 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 				// Grab and set the exclusion array
 				$db->setQuery( "SELECT `group` FROM `mod_intouch_groups` " . ( $this->task == 'edit' ? "WHERE `id` <> " . $db->Quote( $gid ) : '' ) );
 				$excludes	= $db->loadResultArray();
-				//_e( $excludes, 1);
-				//$form->setItem( 'group', $excludes, 'intouch.group', 'excludes' );
+				
+				// Permit disabling wysiwyg
+				$config	= dunloader( 'config', 'intouch' );
+				if (! $config->get( 'usewysiwyg' ) ) {
+					foreach( array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal' ) as $f ) $form->setItem( $f, false, 'intouch.group', 'enable' );
+				}
 				
 				$fields = $form->setValues( $group, 'intouch.group' );
 				
