@@ -15,4 +15,9 @@ if ( function_exists( 'get_dunamis' ) )
 	if ( is_admin() ) {
 		dunmodule( 'intouch.adminareapages' )->execute();
 	}
+	
+	// Run the front end controller
+	if (! is_admin() && ! is_api() ) {
+		dunmodule( 'intouch.clientareapages' )->execute();
+	}
 }

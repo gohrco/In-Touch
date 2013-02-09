@@ -32,7 +32,7 @@ class IntouchConfigureDunModule extends IntouchAdminDunModule
 		switch ( $this->task ):
 		case 'save' :
 			
-				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1' );
+				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1', 'fetoenable' => '0' );
 				
 				foreach ( $config as $item => $default ) {
 					$key = $item; $value = $input->getVar( $item, $default );
