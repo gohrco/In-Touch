@@ -143,9 +143,10 @@ $lang['admin.form.config.info.invalidkey']		= '<div class="alert alert-error">Th
 $lang['admin.form.config.info.invalidmsg']		= '<div class="alert alert-error">The license above came back with an error message: %s</div>';
 
 
-//	------------------------------------------------------------------------
+//	========================================================================
 //	Configure Page
 //		WHMCS > Addons > In Touch > Configure
+//	========================================================================
 //		as of 2.0.0
 //	------------------------------------------------------------------------
 $lang['admin.form.config.label.enable']		= 'Enable';
@@ -156,9 +157,17 @@ $lang['admin.form.config.desc.enable']		= 'This field actually enabled or disabl
 $lang['admin.form.config.desc.apiuser']		= 'This field allows you to select which admin user to make system level calls to your local WHMCS.  This permits you to audit the system.';
 $lang['admin.form.config.desc.usewysiwyg']	= 'This field permits you to disable the use of the WYSIWYG editor on the groups page.';
 
+//		as of 2.1.0
 //	------------------------------------------------------------------------
+$lang['admin.form.config.label.fetoenable']	=	'Override Template';
+$lang['admin.form.config.desc.fetoenable']	=	'This permits you to override the selected WHMCS template based on a users client group.';
+
+
+
+//	========================================================================
 //	Groups Page
 //		WHMCS > Addons > In Touch > Groups
+//	========================================================================
 //		as of 2.0.0
 //	------------------------------------------------------------------------
 $lang['admin.form.group.label.name']		= 'Group Name';
@@ -204,6 +213,22 @@ $lang['admin.list.status.error']	= 'Inactive';
 $lang['admin.group.modal.delete.header']	= 'Confirm Delete';
 $lang['admin.group.modal.delete.title']		= 'Delete %s?';
 $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may have unwanted results.';
+
+//		as of 2.1.0
+//	------------------------------------------------------------------------
+$lang['admin.form.group.label.template']	=	'Template Override';
+$lang['admin.form.group.label.invoiceusefooter']	=	'Add Legal Footer';
+$lang['admin.form.group.label.invoicelegalfooter']	=	'Legal Footer';
+$lang['admin.form.group.label.quoteusefooter']		=	'Add Legal Footer';
+$lang['admin.form.group.label.quotelegalfooter']	=	'Legal Footer';
+
+$lang['admin.form.group.desc.template']		=	'Select which template to use on the front end for clients that are logged in.  This feature only works if you have configured the In Touch product to perform template overrides and if your client is actually logged in.  Selecting `- use WHMCS selected template -` will defer the template selection to the URL parameter or if not set to the selected template in WHMCS\' settings.';
+$lang['admin.form.group.desc.invoiceusefooter']		=	'You can add a legal footer to the bottom of all your invoices for this client group by enabling this setting and adding the footer data below.';
+$lang['admin.form.group.desc.invoicelegalfooter']	=	'Enter the legal footer you want on the bottom of your invoices in this field.';
+$lang['admin.form.group.desc.quoteusefooter']		=	'You can add a legal footer to the bottom of all your quotes for this client group by enabling this setting and adding the footer data below.';
+$lang['admin.form.group.desc.quotelegalfooter']		=	'Enter the legal footer you want on the bottom of your quotes in this field.';
+
+$lang['admin.form.group.option.template']	=	'- use WHMCS selected template -';
 
 
 //	------------------------------------------------------------------------

@@ -83,6 +83,7 @@ function intouch_upgrade($vars)
 		$version = $vars['intouch']['version'];
 	}
 	
+	$origvers	= $version;
 	$thisvers	= "@fileVers@";
 	
 	while( $thisvers > $version ) {
@@ -96,6 +97,9 @@ function intouch_upgrade($vars)
 		$db->setQuery( "SELECT `value` FROM `tbladdonmodules` WHERE `module` = 'intouch' AND `setting` = 'version'" );
 		$version = $db->loadResult();
 	}
+	
+	$install = dunmodule( 'intouch.install' );
+	$install->upgrade( $thisvers, $origvers );
 }
 
 
