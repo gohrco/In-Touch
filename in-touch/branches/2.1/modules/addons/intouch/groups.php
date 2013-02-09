@@ -68,7 +68,7 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 			foreach ( $paramnames as $name ) {
 				$params[$name]	= $input->getVar( $name, null, 'post', 'html' );
 				
-				if ( in_array( $name, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal' ) ) ) {
+				if ( in_array( $name, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal', 'invoicelegalfooter', 'quotelegalfooter' ) ) ) {
 					$params[$name]	= htmlentities( $params[$name] );
 				}
 			}
@@ -145,7 +145,7 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 					$params	= json_decode( $group['params'], true );
 					foreach( $params as $k => $v ) {
 						// Check for HTML entities
-						if ( in_array( $k, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal' ) ) ) {
+						if ( in_array( $k, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal', 'invoicelegalfooter', 'quotelegalfooter' ) ) ) {
 							$group[$k]	= html_entity_decode( html_entity_decode( $v ) );
 							continue;
 						}
@@ -163,10 +163,30 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 				$db->setQuery( "SELECT `group` FROM `mod_intouch_groups` " . ( $this->task == 'edit' ? "WHERE `id` <> " . $db->Quote( $gid ) : '' ) );
 				$excludes	= $db->loadResultArray();
 				
+				// Template overrides (2.1+)
+				$form->setItem( 'template', $this->_getTemplates(), 'intouch.group', 'option' );
+				
 				// Permit disabling wysiwyg
 				$config	= dunloader( 'config', 'intouch' );
 				if (! $config->get( 'usewysiwyg' ) ) {
-					foreach( array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal' ) as $f ) $form->setItem( $f, false, 'intouch.group', 'enable' );
+					foreach( array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal', 'invoicelegalfooter', 'quotelegalfooter') as $f ) $form->setItem( $f, false, 'intouch.group', 'enable' );
+				}
+				else {
+					$doc	=	dunloader( 'document', true );
+					$doc->addScriptDeclaration( <<< JS
+jQuery('#params').next().next().bind( 'click', function() {
+	jQuery('#invoicelegalfooter').prev().css('width', '95%');
+	jQuery('#invoicelegalfooter').prev().prev().css('width', '95%');
+	jQuery('#invoicelegalfooter').prev().find('div:first').css('min-height', '117px' ).css('width', '100%');
+});
+
+jQuery('#params').next().next().next().bind( 'click', function() {
+	jQuery('#quotelegalfooter').prev().css('width', '95%');
+	jQuery('#quotelegalfooter').prev().prev().css('width', '95%');
+	jQuery('#quotelegalfooter').prev().find('div:first').css('min-height', '117px' ).css('width', '100%');
+});
+JS
+							);
 				}
 				
 				$fields = $form->setValues( $group, 'intouch.group' );
@@ -262,6 +282,37 @@ JS;
 				
 			break;
 			// End Task Switch;
+		}
+		
+		return $data;
+	}
+	
+	
+	/**
+	 * Method to gather the templates from the templates folder for selection
+	 * @access		private
+	 * @version		@fileVers@
+	 * 
+	 * @return		array of objects
+	 * @since		2.1.0		
+	 */
+	private function _getTemplates()
+	{
+		$dh		=	opendir( DUN_ENV_PATH . 'templates' );
+		$tmpl	=	
+		$data	=	array();
+		
+		while ( ( $file = readdir( $dh ) ) !== false ) {
+			if ( in_array( $file, array( '.', '..', 'index.html', 'orderforms', 'index.php' ) ) ) continue;
+			$tmpl[]	= $file;
+		}
+		
+		sort( $tmpl );
+		
+		$data[]	= (object) array( 'id' => '0', 'name' => t( 'intouch.admin.form.group.option.template' ) );
+		
+		foreach ( $tmpl as $t ) {
+			$data[]	= (object) array( 'id' => $t, 'name' => ucfirst( $t ) );
 		}
 		
 		return $data;
