@@ -154,10 +154,9 @@ class IntouchInstallDunModule extends WhmcsDunModule
 				$legalfooter	=	<<< HTML
 
 # Legal Footer
-\$pdf->writeHTML( \$legalfooter, true, false, false, false, '' );
+\$pdf->writeHTML( html_entity_decode( \$legalfooter ), true, false, false, false, '' );
 
 # Generation Date
-
 HTML;
 				
 				$regex	= array(
@@ -189,8 +188,7 @@ if (\$notes) {
 }
 
 # Legal Footer
-\$pdf->writeHTML( \$legalfooter, true, false, false, false, '' );
-
+\$pdf->writeHTML( html_entity_decode( \$legalfooter ), true, false, false, false, '' );
 
 HTML;
 				
@@ -267,9 +265,10 @@ HTML;
  */
 		
 // We must have the Dunamis Framework so lets build the path
-\$path	= $path;
-\$logo	= false;
-	
+\$path			= $path;
+\$logo			= false;
+\$legalfooter	= null;
+
 // If the Dunamis Framework file is in place we should be okay to load
 if ( file_exists( \$path ) ) {
 		
@@ -291,8 +290,8 @@ CODE;
 		case 'quotepdf' :
 		case 'invoicepdf' :
 			$data	.= <<< CODE
-			\$logo	= \$module->getLogoPath();
-			\$addr	= \$module->getCustomAddress();
+			\$logo			= \$module->getLogoPath();
+			\$addr			= \$module->getCustomAddress();
 			\$legalfooter	= \$module->getLegalFooter();
 			
 			if ( \$addr ) {
