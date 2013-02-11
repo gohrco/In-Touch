@@ -256,6 +256,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		
 		// We are wanting to add a billable item and invoice
 		if ( $input->getVar( 'billingaction', 0 ) != 3 ) return;
+		if ( $input->getVar( 'billingamount', 'Amount' ) == 'Amount' ) return;
 		
 		// Grab our intended API User
 		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
