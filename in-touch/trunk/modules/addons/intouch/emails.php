@@ -1,9 +1,55 @@
 <?php defined('DUNAMIS') OR exit('No direct script access allowed');
 
 
-
+/**
+ * In Touch Emails class
+ * @version		@fileVers@
+ * 
+ * @author		Steven
+ * @since		2.0.0
+ */
 class IntouchEmailsDunModule extends WhmcsDunModule
 {
+	
+	/**
+	 * When we send a custom email through WHMCS, they dont wipe the mass mail template for some reason
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @since		2.0.0
+	 */
+	public function cleanMess()
+	{
+		$db		=	dunloader( 'database', true );
+	
+		if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
+			$db->setQuery( "DELETE FROM `tblemailtemplates` WHERE `name` = 'Mass Mail Template'" );
+		}
+		else {
+			$db->setQuery( "DELETE FROM `tblemailtemplates` WHERE `name` LIKE 'In Touch%'" );
+		}
+		$db->query();
+	}
+	
+	
+	/**
+	 * Method for determining if we are dealing with a contact
+	 * @desc		WHMCS wipes the reset key prior to getting to us so we must test it in the initialization of the hooks
+	 * 				to see if the key belongs to a contact or client
+	 * @access		public
+	 * @version		@fileVers@
+	 * @param		string		- $key: contains the key passed back to us
+	 * 
+	 * @since		2.0.2
+	 */
+	public function findClient( $key )
+	{
+		global $iscontact;
+		
+		$iscontact = false;
+		extract( $this->_findClient( $key, false ) );
+	}
+	
 	
 	/**
 	 * Initializes the module
@@ -58,6 +104,9 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'pwreset' );
 		}
 		// # BUG - password reset catch
+		else if ( $email->type == 'general' && is_admin() && $email->name == 'Password Reset Confirmation' ) {
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'passwordbyadmin' );
+		}
 		else if ( $email->type == 'general' && $email->name == 'Password Reset Confirmation' ) {
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'password' );
 		}
@@ -115,42 +164,23 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	
 	
 	/**
-	 * When we send a custom email through WHMCS, they dont wipe the mass mail template for some reason
-	 * @access		public
-	 * @version		@fileVers@
-	 * 
-	 * @since		2.0.0
-	 */
-	public function cleanMess()
-	{
-		$db		=	dunloader( 'database', true );
-		
-		if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
-			$db->setQuery( "DELETE FROM `tblemailtemplates` WHERE `name` = 'Mass Mail Template'" );
-		}
-		else {
-			$db->setQuery( "DELETE FROM `tblemailtemplates` WHERE `name` LIKE 'In Touch%'" );
-		}
-		$db->query();
-	}
-	
-	
-	/**
 	 * Method for finding a client / contact by email
 	 * @access		private
 	 * @version		@fileVers@
 	 * @param		string		- $email: contains the email address to search for
+	 * @param		bool		- $isemail: indicates that we are sending an email or the pwresetkey
 	 * 
 	 * @return		array containing clientid (int) / iscontact (bool)
 	 * @since		2.0.2
 	 */
-	private function _findClient( $email )
+	private function _findClient( $email, $isemail = true )
 	{
 		$db			=	dunloader( 'database', true );
 		$clientid	=	false;
 		$iscontact	=	false;
 		
-		$db->setQuery( 'SELECT `id`, `email` FROM `tblclients` WHERE `email` = ' . $db->Quote( $email ) );
+		$query		=	'SELECT `id`, `email` FROM `tblclients` WHERE ' . ( $isemail ? '`email`' : '`pwresetkey`' ) . ' = ' . $db->Quote( $email );
+		$db->setQuery( 'SELECT `id`, `email` FROM `tblclients` WHERE ' . ( $isemail ? '`email`' : '`pwresetkey`' ) . ' = ' . $db->Quote( $email ) );
 		$clients	= $db->loadObjectList();
 		
 		foreach ( $clients as $c ) {
@@ -162,9 +192,10 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		
 		// Nope... try a contact
 		if (! $clientid ) {
-			$db->setQuery( 'SELECT `id`, `email` FROM `tblcontacts` WHERE `email` = ' . $db->Quote( $email ) );
+			$query		= 'SELECT `id`, `email` FROM `tblcontacts` WHERE ' . ( $isemail ? '`email`' : '`pwresetkey`' ) . ' = ' . $db->Quote( $email );
+			$db->setQuery( $query );
 			$clients	= $db->loadObjectList();
-				
+			
 			foreach ( $clients as $c ) {
 				if (! empty( $c->email ) ) {
 					$clientid	= $c->id;
@@ -443,7 +474,8 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	private function _sendPasswordEmail( $email, $vars, $type )
 	{
 		$config		=	dunloader( 'config', 'intouch' );
-		$db			= dunloader( 'database', true );
+		$db			=	dunloader( 'database', true );
+		$input		=	dunloader( 'input', true );
 		
 		// Grab our intended API User
 		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
@@ -458,10 +490,13 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 				$clientid	= false;
 				
 				// Find client first
-				list( $clientid, $iscontact ) = $this->_findClient( $email );
+				extract ( $this->_findClient( $input->getVar( 'email' ) ) );
 				
 				// Send it back so we at least send something out...
 				if (! $clientid ) return false;
+				
+				// WHMCS does not permit contact sends properly
+				if ( $iscontact ) return false;
 				
 				// Lets create the URL
 				$whmcsconf	=	dunloader( 'config', true );
@@ -482,11 +517,17 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 				
 				break;
 			case 'password' :
+				
 				// New password
 				$new_password	= $this->_generateRandom( 8 );
 				
+				global $iscontact;
+				
+				// WHMCS doesn't handle contacts the same (stupid)
+				if ( $iscontact ) return false;
+				
 				// Find client first
-				list( $clientid, $iscontact ) = $this->_findClient( $email );
+				$clientid	= $vars['relid'];
 				
 				// Send it back so we at least send something out...
 				if (! $clientid ) return false;
@@ -506,6 +547,25 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 				
 				return $result;
 				
+				break;
+			case 'passwordbyadmin' :
+				
+				// New password
+				$new_password	= $this->_generateRandom( 8 );
+				
+				$file			=	get_filename();
+				$iscontact		=	$file == 'clientssummary' ? false : true;
+				$clientid		=	$input->getVar( 'userid' );
+				
+				// WHMCS v5.0 / 5.1 does not permit contact intercepts
+				if ( $iscontact ) return false;
+				
+				// Change out the password now...
+				$regex			=	'#{\$client_password}#i';
+				$email->message	=	preg_replace( $regex, $new_password, $email->message );
+				$result			=	$this->_sendEmail( $email, $vars );
+				
+				return $result;
 				break;
 		} // End Switch
 	}
