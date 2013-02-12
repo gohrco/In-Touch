@@ -21,6 +21,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	 * Method to catch the pre-email send hook and change template out
 	 * @access		public
 	 * @version		@fileVers@
+	 * @version		2.0.2		- Feb 2013: Password resets dont get processed the same
 	 * @param		array		- $vars: contains the vars passed to hook
 	 * 
 	 * @return		array containing merge_fields or empty for nothing to add
@@ -51,6 +52,14 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			$email->type = 'quote';
 			$merge_fields	=	$this->_getCustomvars( $email, $vars['relid'], false );
 			return $merge_fields;
+		}
+		// # BUG - password reset request catch
+		else if ( $email->type == 'general' && $email->name == 'Password Reset Validation' ) {
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'pwreset' );
+		}
+		// # BUG - password reset catch
+		else if ( $email->type == 'general' && $email->name == 'Password Reset Confirmation' ) {
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'password' );
 		}
 		else {
 			$result	=	$this->_sendEmail( $email, $vars );
@@ -123,6 +132,70 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			$db->setQuery( "DELETE FROM `tblemailtemplates` WHERE `name` LIKE 'In Touch%'" );
 		}
 		$db->query();
+	}
+	
+	
+	/**
+	 * Method for finding a client / contact by email
+	 * @access		private
+	 * @version		@fileVers@
+	 * @param		string		- $email: contains the email address to search for
+	 * 
+	 * @return		array containing clientid (int) / iscontact (bool)
+	 * @since		2.0.2
+	 */
+	private function _findClient( $email )
+	{
+		$db			=	dunloader( 'database', true );
+		$clientid	=	false;
+		$iscontact	=	false;
+		
+		$db->setQuery( 'SELECT `id`, `email` FROM `tblclients` WHERE `email` = ' . $db->Quote( $email ) );
+		$clients	= $db->loadObjectList();
+		
+		foreach ( $clients as $c ) {
+			if (! empty( $c->email ) ) {
+				$clientid = $c->id;
+				break;
+			}
+		}
+		
+		// Nope... try a contact
+		if (! $clientid ) {
+			$db->setQuery( 'SELECT `id`, `email` FROM `tblcontacts` WHERE `email` = ' . $db->Quote( $email ) );
+			$clients	= $db->loadObjectList();
+				
+			foreach ( $clients as $c ) {
+				if (! empty( $c->email ) ) {
+					$clientid	= $c->id;
+					$iscontact	= true;
+					break;
+				}
+			}
+		}
+		
+		return array( 'clientid' => $clientid, 'iscontact' => $iscontact );
+	}
+	
+	
+	/**
+	 * Random Generator
+	 * @access		private
+	 * @version		@fileVers@
+	 * @param		integer		- $length: the number of characters in the string
+	 * 
+	 * @return		string
+	 * @since		2.0.2
+	 */
+	private function _generateRandom( $length = 24 )
+	{
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, strlen($characters) - 1)];
+		}
+		
+		return $randomString;
 	}
 	
 	
@@ -352,6 +425,89 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		$result	= localAPI( 'sendemail', $emailvars, $apiuser );
 		
 		return $result['result'] == 'success';
+	}
+	
+	
+	/**
+	 * Method for handling password reset emails
+	 * @desc		Password resets are screwy in WHMCS... the token isn't available to pass along for the pwreset request email
+	 * 				and the new password isn't generated until after the preemailsend hook is called
+	 * @access		private
+	 * @version		@fileVers@
+	 * @param		object		- $email: contains the retrieved email object from the database
+	 * @param		array		- $vars: the variables passed to us by the hook originally
+	 *
+	 * @return		boolean result of email call
+	 * @since		2.0.2
+	 */
+	private function _sendPasswordEmail( $email, $vars, $type )
+	{
+		$config		=	dunloader( 'config', 'intouch' );
+		$db			= dunloader( 'database', true );
+		
+		// Grab our intended API User
+		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
+			$apiuser	= '1';
+		}
+		
+		switch ( $type ) {
+			case 'pwreset' :
+				$timestamp	= time() + ( 2 * 60 * 60 );
+				$key		= $this->_generateRandom();
+				$iscontact	= false;
+				$clientid	= false;
+				
+				// Find client first
+				list( $clientid, $iscontact ) = $this->_findClient( $email );
+				
+				// Send it back so we at least send something out...
+				if (! $clientid ) return false;
+				
+				// Lets create the URL
+				$whmcsconf	=	dunloader( 'config', true );
+				$url	=	( $whmcsconf->get( 'SystemSSLURL' ) ? $whmcsconf->get( 'SystemSSLURL' ) : $whmcsconf->get( 'SystemURL' ) ) . '/pwreset.php?key=' . $key;
+				
+				// Change out the URL now...
+				$regex			=	'#{\$pw_reset_url}#i';
+				$email->message	=	preg_replace( $regex, $url, $email->message );
+				
+				$result = $this->_sendEmail( $email, $vars );
+				
+				// NOW we update the database since WHMCS has just done so
+				$query	= "UPDATE " . ( $iscontact ? "`tblcontacts`" : "`tblclients`" ) . " SET `pwresetkey` = " . $db->Quote( $key ) . ", `pwresetexpiry` = " . $timestamp . " WHERE id = " . $clientid;
+				$db->setQuery( $query );
+				$db->query();
+				
+				return $result;
+				
+				break;
+			case 'password' :
+				// New password
+				$new_password	= $this->_generateRandom( 8 );
+				
+				// Find client first
+				list( $clientid, $iscontact ) = $this->_findClient( $email );
+				
+				// Send it back so we at least send something out...
+				if (! $clientid ) return false;
+				
+				// Change out the password now...
+				$regex			=	'#{\$client_password}#i';
+				$email->message	=	preg_replace( $regex, $new_password, $email->message );
+				$result			=	$this->_sendEmail( $email, $vars );
+				
+				// We have to update the database properly
+				$salt	=	$this->_generateRandom( 5 );
+				$md5	=	md5( $salt . $new_password ) . ':' . $salt;
+				$query	=	"UPDATE " . ( $iscontact ? "`tblcontacts`" : "`tblclients`" ) . " SET `password` = " . $db->Quote( $md5 ) . " WHERE `id` = " . $clientid;
+				
+				$db->setQuery( $query );
+				$db->query();
+				
+				return $result;
+				
+				break;
+		} // End Switch
 	}
 	
 	
