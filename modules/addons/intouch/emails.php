@@ -142,14 +142,23 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		if ( strpos( $email->message, '{$intouchheader}' ) === false ) {
 			// We are HIJACKING the Mass Mail Tool
 			global $massmailquery;
-			$db->setQuery( $massmailquery );
-			$results	= $db->loadObjectList();
 			
-			// We now have the same results as WHMCS to cycle through
-			foreach ( $results as $result ) {
-				$this->_sendEmail( $email, array( 'relid' => $result->id ) );
+			// If we didn't get here by using the massmailquery
+			if (! $massmailquery ) {
+				$this->_sendEmail( $email, $vars );
+			}
+			else {
+				// If we have the massmailquery globally then we can cycle through each message
+				$db->setQuery( $massmailquery );
+				$results	= $db->loadObjectList();
+				
+				// We now have the same results as WHMCS to cycle through
+				foreach ( $results as $result ) {
+					$this->_sendEmail( $email, array( 'relid' => $result->id ) );
+				}
 			}
 			
+			// Clean up
 			$this->cleanMess();
 			
 			// Abort the initial mass email
