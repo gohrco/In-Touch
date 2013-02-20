@@ -586,6 +586,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	 * 				in just the original message being sent
 	 * @access		private
 	 * @version		@fileVers@
+	 * @version		2.0.3		- cron runs to escalate tickets with replies being made fail to send message because $message isnt set $addreply is
 	 * @version		2.0.1		- when creating invoice from support ticket WHMCS tries to reload invoice functionality
 	 * @param		object		- $email: contains the retrieved email object from the database
 	 * @param		array		- $vars: the variables passed to us by the hook originally
@@ -597,9 +598,13 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	{
 		// For some reason we dont have the ability to send without hijacking like this
 		if ( $email->name == 'Support Ticket Reply' ) {
-			global $message;
+			global $message, $addreply;
 			$regex	=	'#{\$ticket_message}#i';
-			$email->message	= preg_replace( $regex, nl2br( $message ), $email->message );
+			
+			// If we are running through the cron then message isn't set, addreply is
+			$usemsg	=	(! empty( $message ) ? $message : $addreply );
+			
+			$email->message	= preg_replace( $regex, nl2br( $usemsg ), $email->message );
 			
 			// We have to catch billable items due to poor WHMCS programming
 			if ( is_admin() ) {
