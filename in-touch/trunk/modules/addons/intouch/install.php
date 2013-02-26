@@ -324,12 +324,13 @@ CODE;
 		switch ( $config ) :
 		case 'settings' :
 			$data	= array(
-					'license'	=> null,
-					'localkey'	=> null,
-					'enable'	=> 0,
-					'apiuser'	=> null,
-					'checksum'	=> null,
-					'updates'	=> null,
+					'license'		=> null,
+					'localkey'		=> null,
+					'enable'		=> 0,
+					'apiuser'		=> null,
+					'checksum'		=> null,
+					'updates'		=> null,
+					'usewysiwyg'	=> 1,
 					);
 		break;
 		endswitch;
