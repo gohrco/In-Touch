@@ -110,6 +110,9 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		else if ( $email->type == 'general' && $email->name == 'Password Reset Confirmation' ) {
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'password' );
 		}
+		else if ( $email->type == 'general' && $email->name == 'Order Confirmation' ) {
+			$result	=	$this->_sendOrderEmail( $email, $vars, 'orderconfirm' );
+		}
 		else {
 			$result	=	$this->_sendEmail( $email, $vars );
 		}
@@ -465,6 +468,83 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		$result	= localAPI( 'sendemail', $emailvars, $apiuser );
 		
 		return $result['result'] == 'success';
+	}
+	
+	
+	/**
+	 * Method for handling order confirmation emails
+	 * @desc		Order confirmation emails are being sent out but do not include the order details.
+	 * @access		private
+	 * @version		@fileVers@
+	 * @param		object		- $email: contains the retrieved email object from the database
+	 * @param		array		- $vars: the variables passed to us by the hook originally
+	 * @param		string		- $type: provided to allow for switching based on email type
+	 *
+	 * @return		boolean result of email call
+	 * @since		2.0.4
+	 */
+	private function _sendOrderEmail( $email, $vars, $type )
+	{
+		$config		=	dunloader( 'config', 'intouch' );
+		$db			=	dunloader( 'database', true );
+		$input		=	dunloader( 'input', true );
+		
+		// Grab our intended API User
+		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
+			$apiuser	= '1';
+		}
+		
+		switch ( $type ) {
+			case 'orderconfirm':
+				// First lets get the order
+				$orders		= (object) localAPI( 'getorders', array( 'userid' => $vars['relid'] ), '1' );
+				
+				// Be sure we found one and get the very first order
+				if ( $orders->result != 'success' ) return false;
+				if ( $orders->totalresults == '0' ) return false;
+				$order		=	(object) $orders->orders['order']['0'];
+				
+				$message	=	array();
+				$string		=	<<< LANG
+Product/Service: %s<br>
+First Payment Amount: %s<br>
+Recurring Amount: %s<br>
+Billing Cycle: %s<br>
+LANG;
+				
+				// Cycle through the order line items to build the array
+				foreach ( $order->lineitems['lineitem'] as $item ) {
+					// We must build the recurring amount for the each product (stupid...)
+					$service		= (object) localAPI( 'getclientsproducts', array( 'serviceid' => $item['relid'] ), '1' );
+					$service		= (object) $service->products['product'][0];
+					$recurring		= $order->currencyprefix . $service->recurringamount . $order->currencysuffix;
+					
+					$message[]		=	sprintf( $string, $item['product'], $item['amount'], $recurring, $item['billingcycle'] );
+				}
+				
+				$string		=	<<< STRING
+%s
+<br>
+Total Due Today: %s%s%s
+STRING;
+				
+				$message	=	sprintf( $string, implode( "<br>", $message ), $order->currencyprefix, $order->amount, $order->currencysuffix );
+				
+				// Add in the order #
+				$regex			=	'#{\$order_number}#i';
+				$email->message	=	preg_replace( $regex, $order->ordernum, $email->message );
+				
+				// Add in the details
+				$regex			=	'#{\$order_details}#i';
+				$email->message	=	preg_replace( $regex, str_replace( '$', '\$', $message ), $email->message );
+				
+				$result = $this->_sendEmail( $email, $vars );
+				
+				return $result;
+				break;
+		}
+		
+		
 	}
 	
 	
