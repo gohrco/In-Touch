@@ -1,0 +1,23 @@
+<project>
+
+	<target name="properties_system">
+		
+		<!-- System Level Properties -->
+		<property name="src.dev" value="${local.LOCATION_ROOTDIR}${project.PATH}" />
+		<property name="dst.build" value="${local.LOCATION_BUILDDIR}v${project.VERSION}" />
+		<property name="dst.package" value="${local.LOCATION_PACKAGES}v${project.VERSION}" />
+		<property name="src.build" value="${dst.build}" />
+		
+		<tstamp>
+			<format property="TODAY" pattern="yyyy MMMM d" />
+			<format property="RELDATE" pattern="yyyy-MM-dd" />
+		</tstamp>
+		
+		<!-- Copy Level Properties -->
+		<property name="local.whmcs" value="${local.LOCATION_LOCALHOME}whmcs/" />
+		
+		<!-- Packaging Level Properties -->
+		
+	</target>
+	
+</project>
