@@ -212,3 +212,5 @@ $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may 
 //	------------------------------------------------------------------------
 //	Quotes
 $lang['adminarea.quotes.clientgroup']	= 'Client Group';
+
+
