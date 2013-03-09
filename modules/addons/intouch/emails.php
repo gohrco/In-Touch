@@ -118,6 +118,10 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		else if ( $email->type == 'general' && $email->name == 'Order Confirmation' ) {
 			$result	=	$this->_sendOrderEmail( $email, $vars, 'orderconfirm' );
 		}
+		// # BUG - Client Signup Emails send out ***** passwords
+		else if ( $email->type == 'general' && $email->name == 'Client Signup Email' ) {
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'clientsignup' );
+		}
 		else {
 			$result	=	$this->_sendEmail( $email, $vars );
 		}
@@ -577,6 +581,25 @@ STRING;
 		}
 		
 		switch ( $type ) {
+			// Client Signup Email catch
+			case 'clientsignup' :
+				
+				// Grab the password
+				$passwd	=	$input->getVar( 'password', false );
+				
+				// If we don't have it for some reason get outta here
+				if ( $passwd === false ) {
+					return false;
+				}
+				
+				// Change out the password
+				$regex			=	'#{\$client_password}#i';
+				$email->message	=	preg_replace( $regex, $passwd, $email->message );
+				
+				return $this->_sendEmail( $email, $vars );
+				
+				break;
+				
 			case 'pwreset' :
 				$timestamp	= time() + ( 2 * 60 * 60 );
 				$key		= $this->_generateRandom();
