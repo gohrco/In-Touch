@@ -78,6 +78,11 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		$db				=	dunloader( 'database', true );
 		$config			=	dunloader( 'config', 'intouch' );
 		
+		// Check the global enable first - if disabled stop now
+		if ( ( (bool) $config->get( 'enable', false ) ) === false ) {
+			return array();
+		}
+		
 		// First see if we have a matching email 
 		$db->setQuery( "SELECT * FROM `tblemailtemplates` WHERE `name` = " . $db->Quote( $vars['messagename'] ) );
 		$email	=	$db->loadObject();
