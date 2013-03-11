@@ -1,0 +1,16 @@
+NAME=In Touch
+PATH=In Touch/
+AUTHOR=Go Higher Information Services, LLC
+EMAIL=development@gohigheris.com
+URL=https://www.gohigheris.com
+LICENSE=GNU General Public License version 2, or later
+COPYRIGHT=2013 Go Higher Information Services, LLC.  All rights reserved.
+#
+SERIES=2.0
+SHORT=205
+VERSION=2.0.5
+#
+MATURITY=stable
+ACCESS=Public
+DESCRIPTION=<p>This module permits you to use multiple companies through the same WHMCS interface.</p><p>Note that this module requires the Dunamis Framework</p>
+ITEMACCESS=In Touch AxsLvl
