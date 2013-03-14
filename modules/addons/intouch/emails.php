@@ -112,6 +112,10 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		else if ( $email->type == 'general' && is_admin() && $email->name == 'Password Reset Confirmation' ) {
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'passwordbyadmin' );
 		}
+		// # BUG - password reset catch
+		else if ( $email->type == 'general' && is_admin() && $email->name == 'Automated Password Reset' ) {
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'passwordbyadmin' );
+		}
 		else if ( $email->type == 'general' && $email->name == 'Password Reset Confirmation' ) {
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'password' );
 		}
@@ -674,7 +678,7 @@ STRING;
 				$iscontact		=	$file == 'clientssummary' ? false : true;
 				$clientid		=	$input->getVar( 'userid' );
 				
-				// WHMCS v5.0 / 5.1 does not permit contact intercepts
+				// WHMCS v5.0 / 5.1 / 5.2 do not permit contact intercepts
 				if ( $iscontact ) return false;
 				
 				// Change out the password now...
