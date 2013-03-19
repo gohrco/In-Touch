@@ -61,6 +61,7 @@ class IntouchAdminDunModule extends WhmcsDunModule
 				"author"		=> t( 'intouch.addon.author' ),
 				"description"	=> t( 'intouch.addon.description' ),
 				"language"		=> "english",
+				"logo"			=> get_baseurl( 'intouch' ) . 'assets/in_touch-48.png',
 				"fields"		=> array()
 		);
 		

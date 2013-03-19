@@ -86,6 +86,14 @@ function intouch_upgrade($vars)
 	$origvers	= $version;
 	$thisvers	= "@fileVers@";
 	
+	// Delete toggleyn field file
+	if ( version_compare( $version, '2.0.5', 'le' ) ) {
+		$path	=	dirname( __FILE__ ) . 'dunamis' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR;
+		if ( file_exists( $path . 'toggleyn.php' ) ) {
+			unlink( $path . 'toggleyn.php' );
+		}
+	}
+	
 	while( $thisvers > $version ) {
 		$filename	= 'sql' . DIRECTORY_SEPARATOR . 'upgrade-' . $version . '.sql';
 		if (! file_exists( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . $filename ) ) {

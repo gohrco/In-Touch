@@ -121,7 +121,7 @@ $lang['admin.widget.body.license.alert']	=	'<p>Your Support and Upgrade Pack exp
 $lang['admin.widget.body.license.danger']	=	'<p>There is a problem with your license!</p><p>Please double check that your license key as entered is valid.  You will be unable to save or modify settings until the license is updated.</p>';
 // Like Us Widget
 $lang['admin.widget.header.likeus']		= '';
-$lang['admin.widget.body.likeus']		=	'<p>If you find In Touch useful please tell others about it by visiting WHMCS App Store and liking the product!</p>';
+$lang['admin.widget.body.likeus']		=	'<p>If you find In Touch useful please tell others about it by visiting <a href="https://www.whmcs.com/appstore/1102/In-Touch.html" target="blank">WHMCS App Store<?a> and liking the product!</p>';
 
 //	------------------------------------------------------------------------
 //	Licensing Page
@@ -237,3 +237,5 @@ $lang['admin.form.group.option.template']	=	'- use WHMCS selected template -';
 //	------------------------------------------------------------------------
 //	Quotes
 $lang['adminarea.quotes.clientgroup']	= 'Client Group';
+
+
