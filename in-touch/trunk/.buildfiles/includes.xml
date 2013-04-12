@@ -40,4 +40,7 @@
 	<!-- Import Deployment Files -->
 	<import file="deploy/deploy-all.xml" />
 	
+	<!-- Import Document Files -->
+	<import file="document/document-all.xml" />
+	
 </project>

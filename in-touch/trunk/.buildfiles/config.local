@@ -9,3 +9,6 @@ LOCATION_PACKAGES=C:/Extensions/In Touch/Archives/
 
 <!-- Location of local server root directory (not including subdirectories of specific applications -->
 LOCATION_LOCALHOME=C:/xampp/htdocs/__Integrator 2.4.0 WC/
+
+<!-- Location of this projects extensions builds folder -->
+LOCATION_DOCUMENTATION=C:/Extensions/In Touch/Documentation/

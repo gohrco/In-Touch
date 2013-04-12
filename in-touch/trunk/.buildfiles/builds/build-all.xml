@@ -19,6 +19,18 @@
 			<echo message="-----------------------------------------------------" />
 			<echo message=" " />
 			<echo message=" " />
+			
+			<echo message=" " />
+			<echo message="Copy Documentation Over" />
+			<echo message="-----------------------------------------------------" />
+		
+		<repl_dir src="documents" destination="${dst.documentation}" />
+		
+			<echo message=" " />
+			<echo message="Complete Documentation Copy Over" />
+			<echo message="-----------------------------------------------------" />
+			<echo message=" " />
+			<echo message=" " />
 	</target> 
 	
 </project> 
