@@ -716,7 +716,7 @@ STRING;
 			// If we are running through the cron then message isn't set, addreply is
 			$usemsg	=	(! empty( $message ) ? $message : $addreply );
 			
-			$email->message	= preg_replace( $regex, nl2br( $usemsg ), $email->message );
+			$email->message	= preg_replace( $regex, preg_quote( nl2br( $usemsg ) ), $email->message );
 			
 			// We have to catch billable items due to poor WHMCS programming
 			if ( is_admin() ) {
