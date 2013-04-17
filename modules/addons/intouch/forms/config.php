@@ -30,4 +30,12 @@ $form	= array(
 				'label'			=> 'intouch.admin.form.config.label.usewysiwyg',
 				'description'	=> 'intouch.admin.form.config.desc.usewysiwyg',
 		),
+		'dlid'	=> array(
+				'order'			=> 40,
+				'type'			=> 'text',
+				'value'			=> null,
+				'validation'	=> '',
+				'label'			=> 'intouch.admin.form.config.label.dlid',
+				'description'	=> 'intouch.admin.form.config.description.dlid',
+		),
 		);

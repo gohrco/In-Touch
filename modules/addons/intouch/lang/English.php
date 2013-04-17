@@ -55,13 +55,16 @@ $lang['admin.title.license.save']			= '<small>Licensing :: Save License</small>'
 $lang['admin.title.configure']				=
 $lang['admin.title.configure.default']		= '<small>Configure</small>';
 $lang['admin.title.configure.save']			= '<small>Configure :: Save Settings</small>';
+// 2.0.8
+$lang['admin.title.updates.default']		=	'<small>Update Manager</small>';
 
 // Navigation Bar
 $lang['admin.navbar.default']	= 'Dashboard';
 $lang['admin.navbar.groups']	= 'Groups';
 $lang['admin.navbar.configure']	= 'Configure';
 $lang['admin.navbar.license']	= 'License';
-
+// 2.0.8
+$lang['admin.navbar.updates']	= 'Updates';
 
 //	------------------------------------------------------------------------
 //	Admin Output - General Form Items
@@ -151,10 +154,13 @@ $lang['admin.form.config.info.invalidmsg']		= '<div class="alert alert-error">Th
 $lang['admin.form.config.label.enable']		= 'Enable';
 $lang['admin.form.config.label.apiuser']	= 'API User';
 $lang['admin.form.config.label.usewysiwyg'] = 'Use WYSIWYG';
+$lang['admin.form.config.label.dlid']			= 'Download ID';
 
 $lang['admin.form.config.desc.enable']		= 'This field actually enabled or disables the product globally.';
 $lang['admin.form.config.desc.apiuser']		= 'This field allows you to select which admin user to make system level calls to your local WHMCS.  This permits you to audit the system.';
 $lang['admin.form.config.desc.usewysiwyg']	= 'This field permits you to disable the use of the WYSIWYG editor on the groups page.';
+$lang['admin.form.config.description.dlid']			=	'This is the Download ID available from our web site.  Simply retrieve it and enter it here for the update feature to work.  You must have an active In Touch license to be able to download updates.';
+
 
 //	------------------------------------------------------------------------
 //	Groups Page
@@ -214,3 +220,25 @@ $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may 
 $lang['adminarea.quotes.clientgroup']	= 'Client Group';
 
 
+
+//	------------------------------------------------------------------------
+//	Updates
+//		as of 2.0.8
+//	------------------------------------------------------------------------
+$lang['updates.checking.title']		=	"Checking for Updates";
+$lang['updates.checking.subtitle']	=	"Please wait...";
+
+$lang['updates.none.title']		=	"Check Complete";
+$lang['updates.none.subtitle']	=	"Your version %s is the latest release";
+
+$lang['updates.exist.title']	=	"Updates Found!";
+$lang['updates.exist.subtitle']	=	"Click to update";
+
+$lang['updates.init.title']		=	"Downloading Update";
+$lang['updates.init.subtitle']	=	"Downloading version %s...";
+
+$lang['updates.download.title']		=	"Installing Update";
+$lang['updates.download.subtitle']	=	"Installing version %s...";
+
+$lang['updates.complete.title']		=	"Upgrade Complete!";
+$lang['updates.complete.subtitle']	=	"Version %s installed";
