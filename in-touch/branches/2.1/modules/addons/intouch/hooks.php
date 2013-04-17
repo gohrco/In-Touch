@@ -15,6 +15,9 @@ if ( function_exists( 'get_dunamis' ) )
 	if ( is_admin() ) {
 		dunmodule( 'intouch.adminareapages' )->execute();
 	}
+	else {
+		dunmodule( 'intouch.clientareapages' )->execute();
+	}
 	
 	// Now we must do backwards compatibility testing
 	if (! is_api() ) {
