@@ -55,12 +55,16 @@ $lang['admin.title.license.save']			= '<small>Licensing :: Save License</small>'
 $lang['admin.title.configure']				=
 $lang['admin.title.configure.default']		= '<small>Configure</small>';
 $lang['admin.title.configure.save']			= '<small>Configure :: Save Settings</small>';
+// 2.0.8
+$lang['admin.title.updates.default']		=	'<small>Update Manager</small>';
 
 // Navigation Bar
 $lang['admin.navbar.default']	= 'Dashboard';
 $lang['admin.navbar.groups']	= 'Groups';
 $lang['admin.navbar.configure']	= 'Configure';
 $lang['admin.navbar.license']	= 'License';
+// 2.0.8
+$lang['admin.navbar.updates']	= 'Updates';
 
 
 //	------------------------------------------------------------------------
@@ -152,10 +156,12 @@ $lang['admin.form.config.info.invalidmsg']		= '<div class="alert alert-error">Th
 $lang['admin.form.config.label.enable']		= 'Enable';
 $lang['admin.form.config.label.apiuser']	= 'API User';
 $lang['admin.form.config.label.usewysiwyg'] = 'Use WYSIWYG';
+$lang['admin.form.config.label.dlid']			= 'Download ID';
 
 $lang['admin.form.config.desc.enable']		= 'This field actually enabled or disables the product globally.';
 $lang['admin.form.config.desc.apiuser']		= 'This field allows you to select which admin user to make system level calls to your local WHMCS.  This permits you to audit the system.';
 $lang['admin.form.config.desc.usewysiwyg']	= 'This field permits you to disable the use of the WYSIWYG editor on the groups page.';
+$lang['admin.form.config.description.dlid']			=	'This is the Download ID available from our web site.  Simply retrieve it and enter it here for the update feature to work.  You must have an active In Touch license to be able to download updates.';
 
 //		as of 2.1.0
 //	------------------------------------------------------------------------
@@ -214,22 +220,6 @@ $lang['admin.group.modal.delete.header']	= 'Confirm Delete';
 $lang['admin.group.modal.delete.title']		= 'Delete %s?';
 $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may have unwanted results.';
 
-//		as of 2.1.0
-//	------------------------------------------------------------------------
-$lang['admin.form.group.label.template']	=	'Template Override';
-$lang['admin.form.group.label.invoiceusefooter']	=	'Add Legal Footer';
-$lang['admin.form.group.label.invoicelegalfooter']	=	'Legal Footer';
-$lang['admin.form.group.label.quoteusefooter']		=	'Add Legal Footer';
-$lang['admin.form.group.label.quotelegalfooter']	=	'Legal Footer';
-
-$lang['admin.form.group.desc.template']		=	'Select which template to use on the front end for clients that are logged in.  This feature only works if you have configured the In Touch product to perform template overrides and if your client is actually logged in.  Selecting `- use WHMCS selected template -` will defer the template selection to the URL parameter or if not set to the selected template in WHMCS\' settings.';
-$lang['admin.form.group.desc.invoiceusefooter']		=	'You can add a legal footer to the bottom of all your invoices for this client group by enabling this setting and adding the footer data below.';
-$lang['admin.form.group.desc.invoicelegalfooter']	=	'Enter the legal footer you want on the bottom of your invoices in this field.';
-$lang['admin.form.group.desc.quoteusefooter']		=	'You can add a legal footer to the bottom of all your quotes for this client group by enabling this setting and adding the footer data below.';
-$lang['admin.form.group.desc.quotelegalfooter']		=	'Enter the legal footer you want on the bottom of your quotes in this field.';
-
-$lang['admin.form.group.option.template']	=	'- use WHMCS selected template -';
-
 
 //	------------------------------------------------------------------------
 //	Admin Area Pages
@@ -239,3 +229,25 @@ $lang['admin.form.group.option.template']	=	'- use WHMCS selected template -';
 $lang['adminarea.quotes.clientgroup']	= 'Client Group';
 
 
+
+//	------------------------------------------------------------------------
+//	Updates
+//		as of 2.0.8
+//	------------------------------------------------------------------------
+$lang['updates.checking.title']		=	"Checking for Updates";
+$lang['updates.checking.subtitle']	=	"Please wait...";
+
+$lang['updates.none.title']		=	"Check Complete";
+$lang['updates.none.subtitle']	=	"Your version %s is the latest release";
+
+$lang['updates.exist.title']	=	"Updates Found!";
+$lang['updates.exist.subtitle']	=	"Click to update";
+
+$lang['updates.init.title']		=	"Downloading Update";
+$lang['updates.init.subtitle']	=	"Downloading version %s...";
+
+$lang['updates.download.title']		=	"Installing Update";
+$lang['updates.download.subtitle']	=	"Installing version %s...";
+
+$lang['updates.complete.title']		=	"Upgrade Complete!";
+$lang['updates.complete.subtitle']	=	"Version %s installed";

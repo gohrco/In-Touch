@@ -7,20 +7,21 @@
 		<attribute name="source" default="${src.dev}/@{src}" />
 		<attribute name="destination" default="${dst.build}/@{dest}" />
 		<!-- Attributes -->
-		<attribute name="project" default="${p.PROJECT_NAME}" />
-		<attribute name="package" default="${p.PROJECT_NAME}" />
-		<attribute name="version" default="${v.VERSION_REVLONG}" />
-		<attribute name="author" default="" />
-		<attribute name="link" default="" />
-		<attribute name="copyright" default="" />
-		<attribute name="license" default="${p.PROJECT_LICENSE}" />
+		<attribute name="project" default="${project.NAME}" />
+		<attribute name="package" default="${project.NAME}" />
+		<attribute name="version" default="${project.VERSION}" />
+		<attribute name="author" default="${project.AUTHOR}" />
+		<attribute name="email" default="${project.EMAIL}" />
+		<attribute name="link" default="${project.URL}" />
+		<attribute name="copyright" default="${project.COPYRIGHT}" />
+		<attribute name="license" default="${project.LICENSE}" />
 		<attribute name="date" default="${TODAY}" />
 		
 		<sequential>
 			<delete dir="@{destination}" />
 			<mkdir dir="@{destination}" />
 			
-			<copy tofile="@{destination}">
+			<copy todir="@{destination}">
 				<fileset dir="@{source}">
 					<exclude name=".*" />
 					<exclude name="README.rst" />
@@ -44,17 +45,17 @@
 						<token key="fileVers" value="@{version}" />
 						<token key="fileDate" value="@{date}" />
 						<!-- Legacy Tokens Below -->
-						<token key="mainVers" value="${v.VERSION_REVMAIN}" />
+						<token key="mainVers" value="@{version}" />
 						<token key="buildDate" value="${TODAY}" />
-						<token key="copyWrite" value="${p.PROJECT_CPWRITE}" />
-						<token key="buildAuthor" value="${p.PROJECT_AUTHOR}" />
-						<token key="buildEmail" value="${p.PROJECT_EMAIL}" />
-						<token key="buildUrl" value="${p.PROJECT_URL}" />
+						<token key="copyWrite" value="@{copyright}" />
+						<token key="buildAuthor" value="@{author}" />
+						<token key="buildEmail" value="@{email}" />
+						<token key="buildUrl" value="@{link}" />
 						<token key="buildLicense" value="@{license}" />
 					</replacetokens>
 				</filterchain>
 			</copy>
-			<copy tofile="@{destination}">
+			<copy todir="@{destination}">
 				<fileset dir="@{source}">
 					<include name=".*" />
 					<exclude name="README.rst" />

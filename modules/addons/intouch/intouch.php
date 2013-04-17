@@ -83,31 +83,9 @@ function intouch_upgrade($vars)
 		$version = $vars['intouch']['version'];
 	}
 	
-	$origvers	= $version;
-	$thisvers	= "@fileVers@";
-	
-	// Delete toggleyn field file
-	if ( version_compare( $version, '2.0.5', 'le' ) ) {
-		$path	=	dirname( __FILE__ ) . 'dunamis' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR;
-		if ( file_exists( $path . 'toggleyn.php' ) ) {
-			unlink( $path . 'toggleyn.php' );
-		}
-	}
-	
-	while( $thisvers > $version ) {
-		$filename	= 'sql' . DIRECTORY_SEPARATOR . 'upgrade-' . $version . '.sql';
-		if (! file_exists( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . $filename ) ) {
-			$thisvers = $version;
-			break;
-		}
-		
-		$db->handleFile( $filename, 'intouch' );
-		$db->setQuery( "SELECT `value` FROM `tbladdonmodules` WHERE `module` = 'intouch' AND `setting` = 'version'" );
-		$version = $db->loadResult();
-	}
-	
+	// We need the installer
 	$install = dunmodule( 'intouch.install' );
-	$install->upgrade( $thisvers, $origvers );
+	$install->upgrade( true, $version );
 }
 
 
