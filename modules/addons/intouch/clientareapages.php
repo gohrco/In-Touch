@@ -49,25 +49,23 @@ class IntouchClientareapagesDunModule extends WhmcsDunModule
 		}
 		
 		// See if we want to customize the front end
-// 		if ( $config->fetoenable == '1' ) {
+		if ( $config->fetoenable == '1' ) {
 			// Perform front end template customization now
 			
-			if ( isset( $GLOBALS['_SESSION']['uid'] ) ) {
+			$useid	=	( isset( $GLOBALS['_SESSION']['uid'] ) ? $GLOBALS['_SESSION']['uid'] : false );
+			
+			// Grab the template
+			$tpl = $this->_getTemplatevalue( $useid );
+			
+			// Ensure we received a template name back
+			if ( $tpl ) {
+				global $systpl;
+				$systpl = $tpl;
 				
-				// Grab the template
-				$tpl = $this->_getTemplatevalue( $GLOBALS['_SESSION']['uid'] );
-				
-				// Ensure we received a template name back
-				if ( $tpl ) {
-					global $systpl, $whmcs;
-					$systpl = $tpl;
-					$whmcs->config['Template'] = $tpl;
-					
-					$GLOBALS['_SESSION']['Template']	= $tpl;
-					$GLOBALS['CONFIG']['Template']		= $tpl;
-				}
+				$GLOBALS['_SESSION']['Template']	= $tpl;
+				$GLOBALS['CONFIG']['Template']		= $tpl;
 			}
-// 		}
+		}
 		
 		return;
 	}
@@ -111,7 +109,14 @@ class IntouchClientareapagesDunModule extends WhmcsDunModule
 	private function _getTemplatevalue( $clientid )
 	{
 		$db	= dunloader( 'database', true );
-		$db->setQuery( "SELECT `params` FROM `tblclients`  c INNER JOIN `mod_intouch_groups` g ON c.groupid = g.group WHERE c.id = " . $db->Quote( $clientid . " LIMIT 1" ) );
+		
+		if ( $clientid !== false ) {
+			$db->setQuery( "SELECT `params` FROM `tblclients` c INNER JOIN `mod_intouch_groups` g ON c.groupid = g.group WHERE c.id = " . $db->Quote( $clientid ) . " LIMIT 1" );
+		}
+		else {
+			$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` g WHERE g.group = '0' LIMIT 1" );
+		}
+		
 		$params	= $db->loadResult();
 		
 		if (! $params ) return false;

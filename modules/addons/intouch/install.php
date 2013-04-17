@@ -97,19 +97,6 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	public function initialise() { }
 	
 	
-	public function upgrade( $version,	$from = '2.0.0' )
-	{
-		// Lets handle upgrades from 2.0
-		if ( version_compare( $from, '2.1', 'l' ) ) {
-			// First revert the files
-			$this->_revertFiles();
-			
-			// Now lets convert to the new files
-			$this->_customiseFiles();
-		}
-	}
-	
-	
 	/**
 	 * Method to handle upgrading from the WHMCS addons manager or from our upgrader
 	 * @access		public

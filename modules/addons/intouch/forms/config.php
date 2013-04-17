@@ -35,6 +35,8 @@ $form	= array(
 				'type'			=> 'toggleyn',
 				'value'			=> true,
 				'validation'	=> '',
+				'labelon'		=> 'intouch.form.toggleyn.enabled',
+				'labeloff'		=> 'intouch.form.toggleyn.disabled',
 				'label'			=> 'intouch.admin.form.config.label.fetoenable',
 				'description'	=> 'intouch.admin.form.config.desc.fetoenable',
 		),
