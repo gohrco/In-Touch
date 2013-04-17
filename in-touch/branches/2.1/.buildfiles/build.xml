@@ -46,4 +46,15 @@
 			<echo message="=====================================================" />
 	</target>
 	
+	<target name="document_project" depends="properties">
+			<echo message="=====================================================" />
+			<echo message="Begin Documenting Project" />
+			<echo message="=====================================================" />
+		<antcall target="build_all" />
+		<antcall target="document_all" />
+			<echo message="=====================================================" />
+			<echo message="Completed Documenting Project" />
+			<echo message="=====================================================" />
+	</target>
+	
 </project> 
