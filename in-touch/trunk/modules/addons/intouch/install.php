@@ -1,6 +1,27 @@
-<?php
+<?php defined('DUNAMIS') OR exit('No direct script access allowed');
+/**
+ * @projectName@
+ * In Touch - Installation Module Base File
+ *
+ * @package    @projectName@
+ * @copyright  @copyWrite@
+ * @license    @buildLicense@
+ * @version    @fileVers@ ( $Id$ )
+ * @author     @buildAuthor@
+ * @since      2.0.0
+ *
+ * @desc       This file handles the installation tasks for the product
+ *
+ */
 
 
+/**
+ * Install Module Class for In Touch
+ * @version		@fileVers@
+ *
+ * @author		Steven
+ * @since		2.0.0
+ */
 class IntouchInstallDunModule extends WhmcsDunModule
 {
 	
@@ -74,6 +95,39 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	 * @since		2.0.0
 	 */
 	public function initialise() { }
+	
+	
+	/**
+	 * Method to handle upgrading from the WHMCS addons manager or from our upgrader
+	 * @access		public
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		boolean		- $iswhmcs: indicates we are coming from WHMCS addonmodules page [t|F]
+	 * @param		string		- $origvers: contains the originally installed version number
+	 *
+	 * @return		boolean
+	 * @since		2.0.8
+	 */
+	public function upgrade( $iswhmcs = false, $origvers = null )
+	{
+		// Handle file manipulation here
+		$this->_handleFiles( $origvers );
+		
+		$db			=	dunloader( 'database', true );
+		$files		=	$this->_getUpgradefiles();
+		$version	=	$db->Quote( "@fileVers@" );
+		
+		foreach ( $files as $v => $file ) {
+			if ( version_compare( $v, $origvers, 'l' ) ) continue;
+			$db->handleFile( $filename, 'intouch' );
+		}
+		
+		if ( $iswhmcs ) return true;
+		
+		$db->setQuery( "UPDATE `tbladdonmodules` SET `value` = $version WHERE `module` = 'intouch' AND `setting` = 'version'" );
+		$db->query();
+	
+		return true;
+	}
 	
 	
 	/**
@@ -363,6 +417,54 @@ CODE;
 		closedir( $dh );
 		
 		return $tmpl_dirs;
+	}
+	
+	
+	/**
+	 * Method to get the upgrade files and ensure they are in order
+	 * @access		private
+	 * @version		@fileVers@ ( $id$ )
+	 *
+	 * @return		array
+	 * @since		2.0.0
+	 */
+	private function _getUpgradefiles()
+	{
+		$dh		=	opendir( dirname(__FILE__) . DIRECTORY_SEPARATOR . 'sql' );
+		$files	=	array();
+	
+		while( ( $file = readdir( $dh ) ) !== false ) {
+			if ( in_array( $file, array( '.', '..' ) ) ) continue;
+			if (! preg_match( "#upgrade-(.*)\.sql#", $file, $matches ) ) continue;
+			$files[$matches[1]] = $file;
+		}
+		
+		return $files;
+	}
+	
+	
+	/**
+	 * Method for handling file removal / manipulation by version changes
+	 * @access		private
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		string		- $version: contains the currently installed version (not the upgraded version)
+	 *
+	 * @since		2.0.8
+	 */
+	private function _handleFiles( $version )
+	{
+		// --------------------
+		// Version 2.0.5 change
+		if ( version_compare( $version, '2.0.5', 'le' ) ) {
+			$path	=	dirname( __FILE__ ) . 'dunamis' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR;
+			if ( file_exists( $path . 'toggleyn.php' ) ) {
+				@unlink( $path . 'toggleyn.php' );
+			}
+		}
+		
+		// --------------------
+		// Future Changes Here
+		
 	}
 	
 	
