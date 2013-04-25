@@ -307,8 +307,9 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	 * @access		private
 	 * @version		@fileVers@
 	 * @param		string		- $type: (general|product|support|affiliate|domain|invoice|
-	 * @param unknown_type $type
-	 * @param unknown_type $id
+	 * 
+	 * return		integer | true
+	 * @since		2.0.0
 	 */
 	private function _getGroupId( $type = 'general', $id = 0 )
 	{
@@ -367,6 +368,41 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		$group	= $db->loadResult();
 		
 		return $group == null ? false : $group;
+	}
+	
+	
+	/**
+	 * Method for getting the message to send back for an order
+	 * @access		private
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		string		- $type: the type of item
+	 *
+	 * @return		string
+	 * @since		2.0.8
+	 */
+	private function _getOrderMessage( $type = 'product' )
+	{
+		switch ( $type ) :
+		case 'domain' :
+			$string		=	<<< LANG
+Domain Registration: %s<br>
+Domain: %s<br>
+First Payment Amount: %s<br>
+Recurring Amount: %s<br>
+Registration Period: %s<br>
+LANG;
+			break;
+		default:
+		$string		=	<<< LANG
+Product/Service: %s<br>
+First Payment Amount: %s<br>
+Recurring Amount: %s<br>
+Billing Cycle: %s<br>
+LANG;
+			break;
+		endswitch;
+		
+		return $string;
 	}
 	
 	
@@ -515,24 +551,35 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 				// Be sure we found one and get the very first order
 				if ( $orders->result != 'success' ) return false;
 				if ( $orders->totalresults == '0' ) return false;
-				$order		=	(object) $orders->orders['order']['0'];
 				
+				$order		=	(object) $orders->orders['order']['0'];
 				$message	=	array();
-				$string		=	<<< LANG
-Product/Service: %s<br>
-First Payment Amount: %s<br>
-Recurring Amount: %s<br>
-Billing Cycle: %s<br>
-LANG;
 				
 				// Cycle through the order line items to build the array
 				foreach ( $order->lineitems['lineitem'] as $item ) {
-					// We must build the recurring amount for the each product (stupid...)
-					$service		= (object) localAPI( 'getclientsproducts', array( 'serviceid' => $item['relid'] ), '1' );
-					$service		= (object) $service->products['product'][0];
-					$recurring		= $order->currencyprefix . $service->recurringamount . $order->currencysuffix;
 					
-					$message[]		=	sprintf( $string, $item['product'], $item['amount'], $recurring, $item['billingcycle'] );
+					$item	=	(object) $item;
+					
+					// We must build the recurring amount for the each product (stupid...)
+					if ( $item->type == 'domain' ) {
+						$service		= (object) localAPI( 'getclientsdomains', array( 'domainid' => $item->relid ), '1' );
+						$service		= (object) $service->domains['domain'][0];
+					}
+					else {
+						$service		= (object) localAPI( 'getclientsproducts', array( 'serviceid' => $item->relid ), '1' );
+						$service		= (object) $service->products['product'][0];
+					}
+					
+					$string			=	$this->_getOrderMessage( $item->type );
+					$recurring		=	$order->currencyprefix . $service->recurringamount . $order->currencysuffix;
+					
+					if ( $item->type == 'domain' ) {
+						$message[]		=	sprintf( $string, $item->product, $item->domain, $item->amount, $recurring, $item->billingcycle . ' Year/s' );
+					}
+					else {
+						$message[]		=	sprintf( $string, $item->product, $item->amount, $recurring, $item->billingcycle );
+					}
+					
 				}
 				
 				$string		=	<<< STRING
