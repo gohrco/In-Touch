@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Builder" basedir="." default="build_project">
+	
+	<import file="includes.xml" />
+	
+	<target name="build_project" depends="properties">
+			<echo message="=====================================================" />
+			<echo message="Begin Build of Entire Project" />
+			<echo message="=====================================================" />
+		<antcall target="build_all" />
+			<echo message="=====================================================" />
+			<echo message="Completed Build of Entire Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+	<target name="copy_project" depends="build_project">
+			<echo message="=====================================================" />
+			<echo message="Begin Copying Project" />
+			<echo message="=====================================================" />
+		<antcall target="copy_all" />
+		<antcall target="copy_dunamis" />
+			<echo message="=====================================================" />
+			<echo message="Completed Copying Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+	<target name="package_project" depends="build_project">
+			<echo message="=====================================================" />
+			<echo message="Begin Packaging Project" />
+			<echo message="=====================================================" />
+		<antcall target="packaging_all" />
+			<echo message="=====================================================" />
+			<echo message="Completed Packaging Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+	<target name="deploy_project" depends="build_project">
+			<echo message="=====================================================" />
+			<echo message="Begin Deployment of Project" />
+			<echo message="=====================================================" />
+		<antcall target="deploy_all" />
+		<antcall target="deploy_dunamis" />
+			<echo message="=====================================================" />
+			<echo message="Completed Deployment of Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+	<target name="document_project" depends="properties">
+			<echo message="=====================================================" />
+			<echo message="Begin Documenting Project" />
+			<echo message="=====================================================" />
+		<antcall target="build_all" />
+		<antcall target="document_all" />
+			<echo message="=====================================================" />
+			<echo message="Completed Documenting Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+</project> 

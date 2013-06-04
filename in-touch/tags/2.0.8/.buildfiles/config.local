@@ -1,0 +1,14 @@
+<!-- Location of your Eclipse Workspace -->
+LOCATION_ROOTDIR=C:/Users/Steven/workspace/
+
+<!-- Location of this projects extensions builds folder -->
+LOCATION_BUILDDIR=C:/Extensions/In Touch/Builds/
+
+<!-- Location of this projects packaging folder -->
+LOCATION_PACKAGES=C:/Extensions/In Touch/Archives/
+
+<!-- Location of local server root directory (not including subdirectories of specific applications -->
+LOCATION_LOCALHOME=C:/xampp/htdocs/__Integrator 2.4.0 WC/
+
+<!-- Location of this projects extensions builds folder -->
+LOCATION_DOCUMENTATION=C:/Extensions/In Touch/Documentation/
