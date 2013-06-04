@@ -1,5 +1,5 @@
 NAME=In Touch
-PATH=In Touch/
+PATH=Intouch/
 AUTHOR=Go Higher Information Services, LLC
 EMAIL=development@gohigheris.com
 URL=https://www.gohigheris.com
@@ -7,8 +7,8 @@ LICENSE=GNU General Public License version 2, or later
 COPYRIGHT=2013 Go Higher Information Services, LLC.  All rights reserved.
 #
 SERIES=2.0
-SHORT=208
-VERSION=2.0.8
+SHORT=209
+VERSION=2.0.9
 #
 MATURITY=stable
 ACCESS=Public
