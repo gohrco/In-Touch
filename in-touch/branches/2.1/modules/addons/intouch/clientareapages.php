@@ -48,14 +48,41 @@ class IntouchClientareapagesDunModule extends WhmcsDunModule
 			$action	=	$input->getVar( 'action', $action, 'request', 'string' );
 		}
 		
+		// Grab our intended API User
+		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
+			$apiuser	= '1';
+		}
+		
 		// See if we want to customize the front end
 		if ( $config->fetoenable == '1' ) {
 			// Perform front end template customization now
-			
+			$tpl	=	false;
 			$useid	=	( isset( $GLOBALS['_SESSION']['uid'] ) ? $GLOBALS['_SESSION']['uid'] : false );
 			
+			// Lets see if we are on the login and catch those (we dont come back here after login to grab session)
+			if ( get_filename() == 'dologin' ) {
+				$username	=	$input->getVar( 'username', null );
+				$result		=	$db->setQuery( "SELECT `id` FROM `tblclients` WHERE `email` = " . $db->Quote( $username ) );
+				$client		=	$db->loadResult();
+				$useid		=	$client ? $client : false;
+			}
+			
+			
 			// Grab the template
-			$tpl = $this->_getTemplatevalue( $useid );
+			if ( $useid ) {
+				$tpl = $this->_getTemplatevalue( $useid );
+			}
+			else {
+				// See if we passed along a client group id
+				$itcg	=	$input->getVar( 'itcg', false, 'request' );
+				
+				if ( $itcg ) {
+					$tpl	=	$this->_getTemplatevalue( $itcg, false );
+					
+					// Set this to our session so we can pull if they register
+					$GLOBALS['_SESSION']['itcg']	=	$itcg;
+				}
+			}
 			
 			// Ensure we received a template name back
 			if ( $tpl ) {
@@ -68,6 +95,38 @@ class IntouchClientareapagesDunModule extends WhmcsDunModule
 		}
 		
 		return;
+	}
+	
+	
+	/**
+	 * Method to handle new user signups
+	 * @access		public
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		array		- $vars: array of variables passed to us
+	 *
+	 * @since		2.1.0
+	 */
+	public function handlenewuser( $vars = array() )
+	{
+		$input	=	dunloader( 'input', true );
+		$config	=	dunloader( 'config', 'intouch' );
+		$db		=	dunloader( 'database', true );
+		
+		// See if we should do anything
+		if ( $config->fetoenable == '1' && isset( $GLOBALS['_SESSION']['itcg'] ) && isset( $vars['relid'] ) ) {
+			$itcg	=	$GLOBALS['_SESSION']['itcg'];
+		}
+		else {
+			return;
+		}
+		
+		// Grab our intended API User
+		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
+			$apiuser	= '1';
+		}
+		
+		// We are here to update the client
+		localAPI( 'UpdateClient', array( 'clientid' => $vars['relid'], 'groupid' => $itcg ), $apiuser );
 	}
 	
 	
@@ -106,15 +165,20 @@ class IntouchClientareapagesDunModule extends WhmcsDunModule
 	 * @return		string containing the selected template to use
 	 * @since		2.1.0
 	 */
-	private function _getTemplatevalue( $clientid )
+	private function _getTemplatevalue( $clientid, $is_client = true )
 	{
 		$db	= dunloader( 'database', true );
 		
-		if ( $clientid !== false ) {
-			$db->setQuery( "SELECT `params` FROM `tblclients` c INNER JOIN `mod_intouch_groups` g ON c.groupid = g.group WHERE c.id = " . $db->Quote( $clientid ) . " LIMIT 1" );
+		if ( $is_client ) {
+			if ( $clientid !== false ) {
+				$db->setQuery( "SELECT `params` FROM `tblclients` c INNER JOIN `mod_intouch_groups` g ON c.groupid = g.group WHERE c.id = " . $db->Quote( $clientid ) . " LIMIT 1" );
+			}
+			else {
+				$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` g WHERE g.group = '0' LIMIT 1" );
+			}
 		}
 		else {
-			$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` g WHERE g.group = '0' LIMIT 1" );
+			$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` g WHERE g.group = " . $db->Quote( $clientid ) . " LIMIT 1" );
 		}
 		
 		$params	= $db->loadResult();
