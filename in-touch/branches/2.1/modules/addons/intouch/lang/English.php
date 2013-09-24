@@ -219,6 +219,12 @@ $lang['admin.list.status.error']	= 'Inactive';
 $lang['admin.group.modal.delete.header']	= 'Confirm Delete';
 $lang['admin.group.modal.delete.title']		= 'Delete %s?';
 $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may have unwanted results.';
+//
+//	2.1.0
+//	------------------------------------------------------------------------
+$lang['admin.form.group.label.template']	=	'Template Group';
+$lang['admin.form.group.desc.template']		=	'If you have enabled the front end template override feature, this setting allows you to use a different template for this user group.';
+$lang['admin.form.group.option.template']	=	' - Use WHMCS Default Template -';
 
 
 //	------------------------------------------------------------------------
