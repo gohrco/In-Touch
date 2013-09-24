@@ -98,6 +98,7 @@ class IntouchInvoicesDunModule extends IntouchClientDunModule
 	 * Common method for getting the invoice id from input handler
 	 * @access		public
 	 * @version		@fileVers@
+	 * @version		2.0.9		-	Sept 2013: adjustment for invoices generated automatically
 	 * 
 	 * @return		integer or false on error
 	 * @since		2.0.0
@@ -108,7 +109,18 @@ class IntouchInvoicesDunModule extends IntouchClientDunModule
 		$iid	=	$input->getVar( 'id', 0, 'post', 'int' );
 		
 		if ( $iid === 0 ) {
-			return false;
+			// ---- Begin: INTOUCH-1
+			//		Invoices are not customized on Ordering or Cron
+			global $invoiceid;
+			
+			// Order handling and cron checks
+			if (! empty( $invoiceid ) ) {
+				$iid	=	$invoiceid;
+			}
+			else {
+				return false;
+			}
+			// ---- End: INTOUCH-1
 		}
 		return $iid;
 	}
