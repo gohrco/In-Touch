@@ -267,22 +267,26 @@ HTML;
 		switch ( $type ) {
 			case 'quotepdf' :
 				$data	= "<?php ";
-				$path	= "dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'quotes';
 				break;
 			case 'invoicepdf' :
 				$data	= "<?php ";
-				$path	= "dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 			case 'viewquote' :
 				$data	= "{php} ";
-				$path	= "dirname( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "global \$smarty;
+
+\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
 				$module	= 'quotes';
 				break;
 			case 'viewinvoice' :
 				$data	= "{php} ";
-				$path	= "dirname( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "global \$smarty;
+
+\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 		} // End Header Build
@@ -306,7 +310,7 @@ HTML;
  */
 		
 // We must have the Dunamis Framework so lets build the path
-\$path			= $path;
+$path
 \$logo			= false;
 \$legalfooter	= null;
 
