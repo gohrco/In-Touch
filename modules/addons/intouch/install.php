@@ -244,22 +244,26 @@ class IntouchInstallDunModule extends WhmcsDunModule
 		switch ( $type ) {
 			case 'quotepdf' :
 				$data	= "<?php ";
-				$path	= "dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'quotes';
 				break;
 			case 'invoicepdf' :
 				$data	= "<?php ";
-				$path	= "dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 			case 'viewquote' :
 				$data	= "{php} ";
-				$path	= "dirname( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "global \$smarty;
+
+\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
 				$module	= 'quotes';
 				break;
 			case 'viewinvoice' :
 				$data	= "{php} ";
-				$path	= "dirname( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+				$path	= "global \$smarty;
+
+\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 		} // End Header Build
@@ -283,9 +287,9 @@ class IntouchInstallDunModule extends WhmcsDunModule
  */
 		
 // We must have the Dunamis Framework so lets build the path
-\$path	= $path;
-\$logo	= false;
-	
+$path
+\$logo			= false;
+
 // If the Dunamis Framework file is in place we should be okay to load
 if ( file_exists( \$path ) ) {
 		
@@ -307,8 +311,8 @@ CODE;
 		case 'quotepdf' :
 		case 'invoicepdf' :
 			$data	.= <<< CODE
-			\$logo	= \$module->getLogoPath();
-			\$addr	= \$module->getCustomAddress();
+			\$logo			= \$module->getLogoPath();
+			\$addr			= \$module->getCustomAddress();
 			
 			if ( \$addr ) {
 				\$companyaddress = \$addr;

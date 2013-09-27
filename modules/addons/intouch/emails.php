@@ -763,7 +763,14 @@ STRING;
 			// If we are running through the cron then message isn't set, addreply is
 			$usemsg	=	(! empty( $message ) ? $message : $addreply );
 			
-			$email->message	= preg_replace( $regex, str_replace( '$', '\$', nl2br( $usemsg ) ), $email->message );
+			
+			if ( empty( $usemsg ) ) {
+				$db	=	dunloader( 'database', true );
+				$db->setQuery( "SELECT `message` FROM `tblticketreplies` WHERE `tid` = " . $db->Quote( $vars['relid'] ) . " AND `userid` = 0 ORDER BY `id` DESC LIMIT 1" );
+				$usemsg	=	addslashes( $db->loadResult() );
+			}
+			
+			$email->message	= preg_replace( $regex, str_replace( '$', '\$', nl2br( $usemsg ) ), $email->message ); // . '<pre>' . print_r( $vars, 1 ) . print_r( $email, 1 ). print_r( $db, 1 ) . '</pre>';
 			
 			// We have to catch billable items due to poor WHMCS programming
 			if ( is_admin() ) {

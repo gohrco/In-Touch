@@ -32,12 +32,21 @@ class IntouchConfigureDunModule extends IntouchAdminDunModule
 		switch ( $this->task ):
 		case 'save' :
 			
-				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1' );
+				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1', 'dlid' => '' );
+				$mycnfg	=	dunloader( 'config', 'intouch' );
 				
 				foreach ( $config as $item => $default ) {
 					$key = $item; $value = $input->getVar( $item, $default );
 					if ( is_array( $value ) ) $value = implode( '|', $value );
-					$db->setQuery( "UPDATE `mod_intouch_settings` SET `value` = " . $db->Quote( $value ) . " WHERE `key` = '{$key}'" );
+					
+					if ( $mycnfg->has( $item ) ) {
+						$db->setQuery( "UPDATE `mod_intouch_settings` SET `value` = " . $db->Quote( $value ) . " WHERE `key` = '{$key}'" );
+					}
+					else {
+						$db->setQuery( "INSERT INTO `mod_intouch_settings` ( `value`, `key` ) VALUES ( " . $db->Quote( $value ) . ", '{$key}' )" );
+					}
+					
+					$mycnfg->set( $key, $value );
 					$db->query();
 				}
 				
