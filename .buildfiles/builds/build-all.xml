@@ -13,7 +13,8 @@
 		<repl_module_file src=".buildfiles/builds/preamble.txt" destination="C:/xampp/preamble.txt" />
 		
 		<ioncube_dir />
-			
+		<licensing src="modules/addons/intouch/dunamis/license.php" dest="modules/addons/intouch/dunamis/license.php" />
+		
 			<echo message=" " />
 			<echo message="Begin Building WHMCS Addon Module" />
 			<echo message="-----------------------------------------------------" />
@@ -31,6 +32,5 @@
 			<echo message="-----------------------------------------------------" />
 			<echo message=" " />
 			<echo message=" " />
-	</target> 
-	
+	</target>
 </project> 

@@ -4,9 +4,9 @@ if (! defined( "DUN_MOD_INTOUCH_SECRET" ) ) define ( 'DUN_MOD_INTOUCH_SECRET', '
 if (! defined( "DUN_MOD_INTOUCH_PATH" ) ) define( 'DUN_MOD_INTOUCH_PATH', dirname( __FILE__ ) );
 if (! defined( "DUN_MOD_INTOUCH_VALID" ) ) define( 'DUN_MOD_INTOUCH_VALID', serialize( array( 'InTouch' ) ) );
 if (! defined( "DUN_MOD_INTOUCH_UPGRADE" ) ) define( 'DUN_MOD_INTOUCH_UPGRADE', serialize( array( 
-		'2.0.0' => strtotime( '2013-01-01' ),
-		'2.0.1' => strtotime( '2013-02-01' ),
-		'2.0.2' => strtotime( '2013-02-12' ), 
+		/*
+		@projectLicensing@
+		*/
 		) ) );
 
 
