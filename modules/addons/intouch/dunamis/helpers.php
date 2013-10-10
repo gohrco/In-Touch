@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * Function for checking compatibility with applications
+ * @version		@fileVers@ ( $id )
+ * @param		string		- $app: the application we are testing - for future expansion
+ *
+ * @return		boolean
+ * @since		2.1.0
+ */
+if (! function_exists( 'check_compatible' ) ) {
+	function check_compatible( $app = 'dunamis' )
+	{
+		switch ( $app ) :
+
+		case 'dunamis'		:	return version_compare( DUNAMIS, '1.2.0', 'ge' );
+
+		endswitch;
+	}
+}
 
 /**
  * Provides consistant checksum creation

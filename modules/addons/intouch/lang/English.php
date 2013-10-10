@@ -10,6 +10,10 @@ $lang['alert.error']				= 'An Error Occurred!';
 $lang['alert.info']					= 'Reminder:';
 $lang['alert.block']				= 'Warning!';
 
+// v2.1.0
+$lang['alert.dunamis.compatible']	=	'The version of Dunamis you are using is not compatible with this version of In Touch.  Please upgrade Dunamis before proceeding.';
+
+
 //
 //	Licensing Alerts
 //	------------------------------------------------------------------------
