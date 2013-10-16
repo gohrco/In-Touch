@@ -19,6 +19,10 @@
 			<echo message="Begin Copying Project" />
 			<echo message="=====================================================" />
 		<antcall target="copy_all" />
+		
+		<property name="copy.destination" value="mods" />
+		<property name="copy.select" value="WHMCS" />
+		
 		<antcall target="copy_dunamis" />
 			<echo message="=====================================================" />
 			<echo message="Completed Copying Project" />

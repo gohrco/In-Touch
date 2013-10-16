@@ -10,6 +10,7 @@
 	<import file="functions/build_changelog.xml" />
 	<import file="functions/create_release.xml" />
 	<import file="functions/ioncube_dir.xml" />
+	<import file="functions/licensing.xml" />
 	<import file="functions/repl_dir.xml" />
 	<import file="functions/repl_file.xml" />
 	<import file="functions/zipr_file.xml" />

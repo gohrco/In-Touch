@@ -3,12 +3,32 @@
 global $aInt;
 
 /**
- * Handle the client group id when adding client from quote conversion
- * @desc		This can't be caught at ClientAdd b/c email would already sent w/out groupid being set
+ * Client Registration Traps
  */
 if ( $vars['messagename'] == 'Client Signup Email' ) {
+	
+	/**
+	 * Handle the client group id when adding client from quote conversion
+	 * @desc		This can't be caught at ClientAdd b/c email would already sent w/out groupid being set
+	 */
 	if ( is_object( $aInt ) && isset( $aInt->filename ) && $aInt->filename == 'quotes' ) {
 		dunmodule( 'intouch.adminareapages' )->execute( 'quotes', 'default', array( 'userid' => $vars['relid'] ) );
+	}
+	
+	/**
+	 * Handle the client group id when client registers on front end
+	 * @desc		This can't be caught at ClientAdd b/c email would already sent w/out groupid being set
+	 */
+	if ( get_filename() == 'register' ) {
+		dunmodule( 'intouch.clientareapages' )->handlenewuser( $vars );
+	}
+	
+	/**
+	 * Handle the client group id when client registers at checkout
+	 * @desc		This can't be caught at ClientAdd b/c email would already sent w/out groupid being set
+	 */
+	if ( get_filename() == 'cart' && dunloader( 'input', true )->getVar( 'a', false ) == 'checkout' ) {
+		dunmodule( 'intouch.clientareapages' )->handlenewuser( $vars );
 	}
 }
 

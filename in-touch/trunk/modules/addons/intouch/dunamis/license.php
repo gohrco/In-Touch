@@ -4,16 +4,9 @@ if (! defined( "DUN_MOD_INTOUCH_SECRET" ) ) define ( 'DUN_MOD_INTOUCH_SECRET', '
 if (! defined( "DUN_MOD_INTOUCH_PATH" ) ) define( 'DUN_MOD_INTOUCH_PATH', dirname( __FILE__ ) );
 if (! defined( "DUN_MOD_INTOUCH_VALID" ) ) define( 'DUN_MOD_INTOUCH_VALID', serialize( array( 'InTouch' ) ) );
 if (! defined( "DUN_MOD_INTOUCH_UPGRADE" ) ) define( 'DUN_MOD_INTOUCH_UPGRADE', serialize( array( 
-		'2.0.0'		=>	'1356998400',	// 2013-01-01
-		'2.0.1'		=>	'1359676800',	// 2013-02-01
-		'2.0.2'		=>	'1360627200',	// 2013-02-12
-		'2.0.3'		=>	'1361836800',	// 2013-02-26
-		'2.0.4'		=>	'1361923200',	// 2013-02-27
-		'2.0.5'		=>	'1362960000',	// 2013-03-11
-		'2.0.6'		=>	'1363219200',	// 2013-03-14
-		'2.0.7'		=>	'1365724800',	// 2013-04-12
-		'2.0.8'		=>	'1370304000',	// 2013-06-04
-		'2.0.9'		=>	'1380240000',	// 2013-09-27
+		/*
+		@projectLicensing@
+		*/
 		) ) );
 
 

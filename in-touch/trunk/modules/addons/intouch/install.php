@@ -192,11 +192,20 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			if ( strpos( $content, 'In Touch Customization and File Inclusion' ) === false ) {
 				rename( $tmpl_path . 'invoicepdf.tpl', $tmpl_path . 'invoicepdf.intouch.bak.tpl' );
 				
+				$legalfooter	=	<<< HTML
+
+# Legal Footer
+\$pdf->writeHTML( html_entity_decode( \$legalfooter ), true, false, false, false, '' );
+
+# Generation Date
+HTML;
+				
 				$regex	= array(
 						"#(\<\?php)#i" => '',
 						"#(.+?/images/logo\.png)#i" => '#${1}',
 						"#(.+?/images/logo\.jpg)#i" => '#${1}',
 						"#(.+?/images/placeholder\.png)#i" => '#${1}',
+						"#(\# Generation Date)#i" => $legalfooter,
 				);
 				
 				foreach ( $regex as $f => $r )
@@ -210,12 +219,26 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			$content	= file_get_contents( $tmpl_path . 'quotepdf.tpl' );
 			if ( strpos( $content, 'In Touch Customization and File Inclusion' ) === false ) {
 				rename( $tmpl_path . 'quotepdf.tpl', $tmpl_path . 'quotepdf.intouch.bak.tpl' );
-			
+				
+				$legalfooter	=	<<< HTML
+
+if (\$notes) {
+	\$pdf->Ln(6);
+    \$pdf->SetFont('freesans','',8);
+	\$pdf->MultiCell(170,5,\$_LANG['invoicesnotes'].": \$notes");
+}
+
+# Legal Footer
+\$pdf->writeHTML( html_entity_decode( \$legalfooter ), true, false, false, false, '' );
+
+HTML;
+				
 				$regex	= array(
 						"#(\<\?php)#i" => '',
 						"#(.+?/images/logo\.png)#i" => '#${1}',
 						"#(.+?/images/logo\.jpg)#i" => '#${1}',
 						"#(.+?/images/placeholder\.png)#i" => '#${1}',
+						"#(if \(\$notes\) \{[.\s\S]+\})#i" => $legalfooter,
 				);
 			
 				foreach ( $regex as $f => $r )
@@ -289,6 +312,7 @@ class IntouchInstallDunModule extends WhmcsDunModule
 // We must have the Dunamis Framework so lets build the path
 $path
 \$logo			= false;
+\$legalfooter	= null;
 
 // If the Dunamis Framework file is in place we should be okay to load
 if ( file_exists( \$path ) ) {
@@ -313,6 +337,7 @@ CODE;
 			$data	.= <<< CODE
 			\$logo			= \$module->getLogoPath();
 			\$addr			= \$module->getCustomAddress();
+			\$legalfooter	= \$module->getLegalFooter();
 			
 			if ( \$addr ) {
 				\$companyaddress = \$addr;

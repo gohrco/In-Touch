@@ -103,6 +103,9 @@ class IntouchAdminDunModule extends WhmcsDunModule
 	 */
 	public function render( $data = null )
 	{
+		// Compatibility check
+		if (! check_compatible( 'dunamis' ) ) $this->setAlert( 'alert.dunamis.compatible', 'error' );
+		
 		$title	= $this->buildTitle();
 		$navbar	= $this->buildNavigation();
 		$alerts	= $this->buildAlerts();
