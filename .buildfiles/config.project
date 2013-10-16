@@ -5,10 +5,11 @@ EMAIL=development@gohigheris.com
 URL=https://www.gohigheris.com
 LICENSE=GNU General Public License version 2, or later
 COPYRIGHT=2013 Go Higher Information Services, LLC.  All rights reserved.
+UPDATE_SITE=https://www.gohigheris.com/updates/whmcsmodules/intouch
 #
-SERIES=2.0
-SHORT=2010
-VERSION=2.0.10
+SERIES=2.1
+SHORT=211
+VERSION=2.1.1
 #
 MATURITY=stable
 ACCESS=Public

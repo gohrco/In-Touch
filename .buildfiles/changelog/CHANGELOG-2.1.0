@@ -1,0 +1,13 @@
+------------------------------------------------------------------------
+r103 | steven_gohigher | 2013-09-27 13:02:37 -0400 (Fri, 27 Sep 2013) | 1 line
+
+*  version 2.0.10 started again...
+------------------------------------------------------------------------
+r104 | steven_gohigher | 2013-10-08 14:15:41 -0400 (Tue, 08 Oct 2013) | 1 line
+
+#  RESOLVED - issue INTOUCH-4: Client Signup Email doesn't go out from summary page in admin area http://support.gohigheris.com/issues/browse/INTOUCH-4
+------------------------------------------------------------------------
+r114 | steven_gohigher | 2013-10-15 20:48:59 -0400 (Tue, 15 Oct 2013) | 1 line
+
+*  In Touch 2.1 merged into trunk
+------------------------------------------------------------------------
