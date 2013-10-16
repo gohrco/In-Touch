@@ -87,6 +87,32 @@ class IntouchClientDunModule extends WhmcsDunModule
 	
 	
 	/**
+	 * Method to get the legal footer for pdfs
+	 * @access		public
+	 * @version		@fileVers@
+	 * 
+	 * @return		string containing any HTML specified for group
+	 * @since		2.1.0
+	 */
+	public function getLegalFooter()
+	{
+		$params	=	$this->getGroupParams();
+		
+		// Somehow we don't have what we need...
+		if (! $params ) return null;
+		
+		if ( $this->action == 'invoices' ) {
+			if ( $params->invoiceusefooter == '1' ) return html_entity_decode( $params->invoicelegalfooter );
+			else return null;
+		}
+		else {
+			if ( $params->quoteeusefooter == '1' ) return $params->quotelegalfooter;
+			else return null;
+		}
+	}
+	
+	
+	/**
 	 * Method to get the logo path from the parameters
 	 * @access		public
 	 * @version		@fileVers@

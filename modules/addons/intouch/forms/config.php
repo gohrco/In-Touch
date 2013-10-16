@@ -30,8 +30,18 @@ $form	= array(
 				'label'			=> 'intouch.admin.form.config.label.usewysiwyg',
 				'description'	=> 'intouch.admin.form.config.desc.usewysiwyg',
 		),
-		'dlid'	=> array(
+		'fetoenable'		=> array(
 				'order'			=> 40,
+				'type'			=> 'toggleyn',
+				'value'			=> true,
+				'validation'	=> '',
+				'labelon'		=> 'intouch.form.toggleyn.enabled',
+				'labeloff'		=> 'intouch.form.toggleyn.disabled',
+				'label'			=> 'intouch.admin.form.config.label.fetoenable',
+				'description'	=> 'intouch.admin.form.config.desc.fetoenable',
+		),
+		'dlid'	=> array(
+				'order'			=> 50,
 				'type'			=> 'text',
 				'value'			=> null,
 				'validation'	=> '',

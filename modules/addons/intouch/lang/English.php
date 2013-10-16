@@ -10,6 +10,10 @@ $lang['alert.error']				= 'An Error Occurred!';
 $lang['alert.info']					= 'Reminder:';
 $lang['alert.block']				= 'Warning!';
 
+// v2.1.0
+$lang['alert.dunamis.compatible']	=	'The version of Dunamis you are using is not compatible with this version of In Touch.  Please upgrade Dunamis before proceeding.';
+
+
 //
 //	Licensing Alerts
 //	------------------------------------------------------------------------
@@ -65,6 +69,7 @@ $lang['admin.navbar.configure']	= 'Configure';
 $lang['admin.navbar.license']	= 'License';
 // 2.0.8
 $lang['admin.navbar.updates']	= 'Updates';
+
 
 //	------------------------------------------------------------------------
 //	Admin Output - General Form Items
@@ -146,9 +151,10 @@ $lang['admin.form.config.info.invalidkey']		= '<div class="alert alert-error">Th
 $lang['admin.form.config.info.invalidmsg']		= '<div class="alert alert-error">The license above came back with an error message: %s</div>';
 
 
-//	------------------------------------------------------------------------
+//	========================================================================
 //	Configure Page
 //		WHMCS > Addons > In Touch > Configure
+//	========================================================================
 //		as of 2.0.0
 //	------------------------------------------------------------------------
 $lang['admin.form.config.label.enable']		= 'Enable';
@@ -161,10 +167,17 @@ $lang['admin.form.config.desc.apiuser']		= 'This field allows you to select whic
 $lang['admin.form.config.desc.usewysiwyg']	= 'This field permits you to disable the use of the WYSIWYG editor on the groups page.';
 $lang['admin.form.config.description.dlid']			=	'This is the Download ID available from our web site.  Simply retrieve it and enter it here for the update feature to work.  You must have an active In Touch license to be able to download updates.';
 
-
+//		as of 2.1.0
 //	------------------------------------------------------------------------
+$lang['admin.form.config.label.fetoenable']	=	'Override Template';
+$lang['admin.form.config.desc.fetoenable']	=	'This permits you to override the selected WHMCS template based on a users client group.';
+
+
+
+//	========================================================================
 //	Groups Page
 //		WHMCS > Addons > In Touch > Groups
+//	========================================================================
 //		as of 2.0.0
 //	------------------------------------------------------------------------
 $lang['admin.form.group.label.name']		= 'Group Name';
@@ -210,6 +223,12 @@ $lang['admin.list.status.error']	= 'Inactive';
 $lang['admin.group.modal.delete.header']	= 'Confirm Delete';
 $lang['admin.group.modal.delete.title']		= 'Delete %s?';
 $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may have unwanted results.';
+//
+//	2.1.0
+//	------------------------------------------------------------------------
+$lang['admin.form.group.label.template']	=	'Template Group';
+$lang['admin.form.group.desc.template']		=	'If you have enabled the front end template override feature, this setting allows you to use a different template for this user group.';
+$lang['admin.form.group.option.template']	=	' - Use WHMCS Default Template -';
 
 
 //	------------------------------------------------------------------------
