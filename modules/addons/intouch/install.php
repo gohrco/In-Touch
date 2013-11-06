@@ -512,8 +512,8 @@ CODE;
 		
 		foreach ( $emails as $email ) {
 			$message	=	$email->message;
-			$regex		=	array( '#{\$intouchsignature}#i', '#{\$intouchheader}#i', '#{\$intouchstyle}#i', '#{\$intouchfooter}#i' );
-			$replace	=	array( '{$signature}', '', '', '' );
+			$regex		=	array( '#{\$intouchsignature}#i', '#{\$intouchheader}#i', '#{\$intouchstyle}#i', '#{\$intouchfooter}#i', '#{\$intouchlegal}#i' );
+			$replace	=	array( '{$signature}', '', '', '', '' );
 			$message	=	preg_replace( $regex, $replace, $message );
 			$db->setQuery( "UPDATE `tblemailtemplates` SET `message` = '" . $message . "' WHERE `id` = " . $db->Quote( $email->id ) );
 			$db->query();
