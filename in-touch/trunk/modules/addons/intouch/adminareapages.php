@@ -75,7 +75,7 @@ JAVASCRIPT;
 		
 		$input	=	dunloader( 'input', true );
 		$db		=	dunloader( 'database', true );
-		return;
+		
 		if ( $action == 'default' ) {
 			$action	=	$input->getVar( 'action', $action, 'request', 'string' );
 		}
