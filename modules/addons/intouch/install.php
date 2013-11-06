@@ -75,6 +75,14 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	 */
 	public function deactivate()
 	{
+		// Be sure to deactivate the database if we need to
+		$db		=	dunloader( 'database', true );
+		$config	=	dunloader( 'config', 'intouch' );
+		
+		if (! $config->get( 'preservedb', false ) ) {
+			$db->handleFile( 'sql' . DIRECTORY_SEPARATOR . 'uninstall.sql', 'intouch' );
+		}
+		
 		// Lets undo our customized files first
 		if (! $this->_revertFiles() ) {
 			// Problem so dont continue;

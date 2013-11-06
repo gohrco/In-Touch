@@ -48,4 +48,14 @@ $form	= array(
 				'label'			=> 'intouch.admin.form.config.label.dlid',
 				'description'	=> 'intouch.admin.form.config.description.dlid',
 		),
+		'preservedb'		=> array(
+				'order'			=> 60,
+				'type'			=> 'toggleyn',
+				'value'			=> true,
+				'validation'	=> '',
+				'labelon'		=> 'intouch.form.toggleyn.enabled',
+				'labeloff'		=> 'intouch.form.toggleyn.disabled',
+				'label'			=> 'intouch.admin.form.settings.label.preservedb',
+				'description'	=> 'intouch.admin.form.settings.description.preservedb',
+		),
 		);
