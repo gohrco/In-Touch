@@ -85,7 +85,6 @@ class IntouchAdminDunModule extends WhmcsDunModule
 			dunloader( 'hooks', true )->attachHooks( 'intouch' );
 			dunloader( 'helpers', 'intouch' );
 			
-			load_bootstrap( 'intouch' );
 			$instance	= true;
 		}
 		
@@ -104,6 +103,8 @@ class IntouchAdminDunModule extends WhmcsDunModule
 	 */
 	public function render( $data = null )
 	{
+		load_bootstrap( 'intouch' );
+		
 		// Compatibility check
 		if (! check_compatible( 'dunamis' ) ) $this->setAlert( 'alert.dunamis.compatible', 'error' );
 		
