@@ -172,6 +172,10 @@ $lang['admin.form.config.description.dlid']			=	'This is the Download ID availab
 $lang['admin.form.config.label.fetoenable']	=	'Override Template';
 $lang['admin.form.config.desc.fetoenable']	=	'This permits you to override the selected WHMCS template based on a users client group.';
 
+//		as of 2.1.1
+//	------------------------------------------------------------------------
+$lang['admin.form.settings.label.preservedb']				=	'Preserve Settings';
+$lang['admin.form.settings.description.preservedb']			=	'Set this to Enabled to ensure if your product is ever deactivated through the WHMCS > Addon Manager that the database settings will be preserved.  This is advised if you ever allow third party support staff to troubleshoot problems on your WHMCS application.';
 
 
 //	========================================================================

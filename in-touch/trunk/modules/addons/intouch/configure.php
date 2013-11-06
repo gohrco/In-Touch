@@ -32,7 +32,7 @@ class IntouchConfigureDunModule extends IntouchAdminDunModule
 		switch ( $this->task ):
 		case 'save' :
 			
-				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1', 'fetoenable' => '0', 'dlid' => '' );
+				$config	= array( 'enable' => '0', 'apiuser' => '1', 'usewysiwyg' => '1', 'fetoenable' => '0', 'dlid' => '', 'preservedb' => '0' );
 				$mycnfg	=	dunloader( 'config', 'intouch' );
 				
 				foreach ( $config as $item => $default ) {
