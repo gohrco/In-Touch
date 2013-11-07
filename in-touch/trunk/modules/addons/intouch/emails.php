@@ -124,7 +124,17 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		}
 		// # BUG - Client Signup Emails send out ***** passwords
 		else if ( $email->type == 'general' && $email->name == 'Client Signup Email' ) {
-			$result	=	$this->_sendPasswordEmail( $email, $vars, 'clientsignup' );
+			
+			// ---- BEGIN INTOUCH-8
+			//		Password is not sent when converting quote to invoice for new client
+			if ( get_filename() == 'quotes' && is_admin() ) {
+				$result	=	$this->_sendPasswordEmail( $email, $vars, 'clientsignupquote' );
+			}
+			else {
+				$result	=	$this->_sendPasswordEmail( $email, $vars, 'clientsignup' );
+			}
+			// ---- END INTOUCH-8
+			
 		}
 		else {
 			$result	=	$this->_sendEmail( $email, $vars );
@@ -632,6 +642,17 @@ STRING;
 		}
 		
 		switch ( $type ) {
+			// Client Signup Email on Quote Conversion catch
+			case 'clientsignupquote' :
+				
+				// Generate our password
+				$passwd			=	substr( md5( $input->getVar( 'id', false ) ), 0, 10 );
+				$regex			=	'#{\$client_password}#i';
+				$email->message	=	preg_replace( $regex, $passwd, $email->message );
+				
+				return $this->_sendEmail( $email, $vars );
+				
+				break;
 			// Client Signup Email catch
 			case 'clientsignup' :
 				
