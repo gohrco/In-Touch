@@ -233,7 +233,17 @@ $lang['admin.group.modal.delete.body']		= 'This action cannot be undone and may 
 $lang['admin.form.group.label.template']	=	'Template Group';
 $lang['admin.form.group.desc.template']		=	'If you have enabled the front end template override feature, this setting allows you to use a different template for this user group.';
 $lang['admin.form.group.option.template']	=	' - Use WHMCS Default Template -';
-
+//
+//	2.1.2
+//	------------------------------------------------------------------------
+$lang['admin.form.group.label.invoiceusefooter']	=	'Enable Legal Footer';
+$lang['admin.form.group.desc.invoiceusefooter']		=	'Enable this option to include a legal footer at the bottom of your invoices.';
+$lang['admin.form.group.label.invoicelegalfooter']	=	'Legal Footer';
+$lang['admin.form.group.desc.invoicelegalfooter']	=	'Enter what you would like to use for the legal footer on your invoices.';
+$lang['admin.form.group.label.quoteusefooter']		=	'Enable Legal Footer';
+$lang['admin.form.group.desc.quoteusefooter']		=	'Enable this option to include a legal footer at the bottom of your quotes.';
+$lang['admin.form.group.label.quotelegalfooter']	=	'Legal Footer';
+$lang['admin.form.group.desc.quotelegalfooter']		=	'Enter what you would like to use for the legal footer on your quotes.';
 
 //	------------------------------------------------------------------------
 //	Admin Area Pages

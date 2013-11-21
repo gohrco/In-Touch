@@ -313,11 +313,59 @@ JS;
 	}
 	
 	
+	/**
+	 * Method to handle hidden WYSIWYG editors on other tabs
+	 * @access		private
+	 * @version		@fileVers@
+	 *
+	 * @since		2.0.0
+	 */
 	private function _handleHiddenWysiwyg()
 	{
 		$doc	= dunloader( 'document', true );
 		
-		if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
+		if ( version_compare( DUN_ENV_VERSION, '5.2', 'ge' ) ) {
+			$js	= <<< JS
+jQuery('#params').next().next().bind( 'click', function() {
+	tinyMCE.init({
+		mode : "exact",
+		elements : "invoicelegalfooter",
+		theme : "advanced",
+		entity_encoding: "raw",
+		convert_urls : false,
+		relative_urls : false,
+		plugins : "style,table,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,visualchars,xhtmlxtras",
+		theme_advanced_buttons1 : "cut,copy,paste,pastetext,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect,|,search,replace",
+		theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,cleanup,code,help",
+		theme_advanced_buttons3 : "", // tablecontrols
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true
+	});
+});
+
+jQuery('#params').next().next().next().bind( 'click', function() {
+	tinyMCE.init({
+		mode : "exact",
+		elements : "quotelegalfooter",
+		theme : "advanced",
+		entity_encoding: "raw",
+		convert_urls : false,
+		relative_urls : false,
+		plugins : "style,table,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,visualchars,xhtmlxtras",
+		theme_advanced_buttons1 : "cut,copy,paste,pastetext,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect,|,search,replace",
+		theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,cleanup,code,help",
+		theme_advanced_buttons3 : "", // tablecontrols
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true
+	});
+});
+JS;
+		}
+		else if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
 			$js	= <<< JS
 jQuery('#params').next().next().bind( 'click', function() {
 	nicEd.panelInstance('invoicelegalfooter');
