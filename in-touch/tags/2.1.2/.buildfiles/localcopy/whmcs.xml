@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Copy - WHMCS" basedir=".">
+	
+	<import file="../includes.xml" />
+	
+	<target name="copy_to_whmcs" depends="properties">
+		
+		<fileset dir="${src.build}/" id="whmcsfiles">
+			<include name="**/*.*" />
+		</fileset>
+		
+		<echo message="[1]  Copying WHMCS Specific Files" />
+		<copy todir="${local.whmcs}">
+			<fileset refid="whmcsfiles" />
+		</copy>
+		
+	</target>
+	
+</project>
