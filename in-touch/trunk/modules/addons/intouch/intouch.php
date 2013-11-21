@@ -30,7 +30,7 @@ if ( file_exists( $path ) ) include_once( $path );
  */
 function intouch_config()
 {
-	if (! function_exists( 'dunmodule' ) ) return array( 'name' => 'WHMCS Themer', 'description' => 'The Dunamis Framework was not detected!  Be sure it is installed fully!', 'version' => "@fileVers@" );
+	if (! function_exists( 'dunmodule' ) ) return array( 'name' => 'In Touch', 'description' => 'The Dunamis Framework was not detected!  Be sure it is installed fully!', 'version' => "@fileVers@" );
 	return dunmodule( 'intouch' )->getAdminConfig();
 }
 
