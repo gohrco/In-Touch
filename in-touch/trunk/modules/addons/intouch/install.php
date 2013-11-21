@@ -287,7 +287,7 @@ HTML;
 				$data	= "{php} ";
 				$path	= "global \$smarty;
 
-\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php'";
+\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'quotes';
 				break;
 			case 'viewinvoice' :
