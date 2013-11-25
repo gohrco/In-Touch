@@ -14,6 +14,8 @@ $form	= array(
 				'type' => 'whmcsclientgroups',
 				'value' => null,
 				'allownogroup' => true,
+				'multiple' => true,
+				'size' => '3',
 				'label' => 'intouch.admin.form.group.label.group',
 				'description' => 'intouch.admin.form.group.desc.group',
 				),

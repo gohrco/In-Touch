@@ -55,11 +55,9 @@ class IntouchQuotesDunModule extends IntouchClientDunModule
 			return false;
 		}
 		
-		$db	= dunloader( 'database', true );
-		
-		$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` WHERE `group`=" . $db->Quote( $gid ) );
-		$result	= $db->loadResult();
-		$params	= json_decode( $result );
+		// Get group data
+		$result	=	getGroupData( $gid );
+		$params	=	json_decode( $result->params );
 		
 		return $params;
 	}

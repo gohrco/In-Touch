@@ -199,6 +199,7 @@ class IntouchClientDunModule extends WhmcsDunModule
 		if (! $instance ) {
 			dunloader( 'language', true )->loadLanguage( 'intouch' );
 			dunloader( 'hooks', true )->attachHooks( 'intouch' );
+			dunloader( 'helpers', 'intouch' );
 			$instance	= true;
 		}
 		
