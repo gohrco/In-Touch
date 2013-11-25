@@ -286,13 +286,11 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		if ( $groupid === false ) return array();
 		
 		// Retrieve the group settings from In Touch
-		$db->setQuery( "SELECT `params` FROM `mod_intouch_groups` WHERE `group` = " . $db->Quote( $groupid ) . " AND `active` = '1'" );
-		
-		if (! ( $params	=	$db->loadResult() ) ) {
+		if ( ( $group = getGroupData( $groupid ) ) === false ) {
 			return ( $encode ? base64_encode( serialize( $vars ) ) : $vars );
 		}
 		
-		$params	=	json_decode( $params, false );
+		$params	=	json_decode( $group->params, false );
 		
 		if (! empty( $params->emailcss ) ) $params->emailcss = '<style>' . $params->emailcss . '</style>';
 		

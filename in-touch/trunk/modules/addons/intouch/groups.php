@@ -58,7 +58,7 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 			$fields		= $form->loadForm( 'group', 'intouch' );
 			$paramnames	=
 			$params		= array();
-				
+			
 			foreach ( $fields as $name => $junk ) {
 				$check = array( 'name', 'group', 'active', 'gid', 'params', 'paramsoptn1', 'paramsoptn2', 'paramsoptn3', 'paramsoptn4', 'paramsoptn1c', 'paramsoptn2c', 'paramsoptn3c', 'paramsoptn4c' );
 				if ( in_array( $name, $check ) ) continue;
@@ -77,7 +77,7 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 			$params['quoteadd']		= str_replace(array("\r\n", "\r", "\n"), '||', $params['quoteadd'] );
 			
 			$name			= $db->Quote( $input->getVar( 'name', null, 'post', 'string' ) );
-			$group			= $db->Quote( $input->getVar( 'group', 0, 'post', 'int'  ) );
+			$group			= $db->Quote( implode( '|', $input->getVar( 'group', 0, 'post', 'array'  ) ) );
 			$active			= $db->Quote( $input->getVar( 'active', 0, 'post', 'int' ) );
 			$paramstring	= $db->Quote( json_encode( $params ) );
 			
@@ -234,7 +234,20 @@ JS
 
 				foreach ( $results as $row ) {
 					
-					$groupname	= $groups[$row->group]['groupname'];
+					// Build our group name
+					if ( strpos( $row->group, '|' ) !== false ) {
+						$groupname	=	array();
+						$grps		=	explode( '|', $row->group );
+						foreach ( $grps as $grp ) {
+							$groupname[] = $groups[$grp]['groupname'];
+						}
+						$groupname	=	implode( ', ', $groupname );
+					}
+					else {
+						$groupname	= $groups[$row->group]['groupname'];
+					}
+					
+					// Set Modal
 					$this->setModal(	'deleteGroup' . $row->id,
 										t( 'intouch.admin.group.modal.delete.title', $row->name ),
 										t( 'intouch.admin.group.modal.delete.header' ),
