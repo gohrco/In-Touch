@@ -1,0 +1,49 @@
+@CHARSET "ISO-8859-1";
+
+/* Common for all the ajax button styles */
+#intouch #btn-updates {
+	padding: 0px;
+	width: 250px;
+}
+
+#intouch .ajaxupdate {
+	height: 210px;
+	width: 250px;
+}
+
+#intouch .ajaxupdate span {
+	color: #333333;
+	display: block;
+	font-size: 135%;
+	font-weight: bold;
+	padding: 15px 0;
+	text-align: center;
+}
+
+#intouch .ajaxupdate span#upd-subtitle {
+	font-size: 90%;
+}
+
+#intouch #img-updates {
+	display: block;
+    margin: 20px auto 20px;
+    max-width: 0;
+    padding: 32px;
+}
+
+#intouch .update-check,
+#intouch .update-init {
+	background-image: url("ajax-loader.gif");
+}
+
+#intouch .update-current {
+	background-image: url("accept-64.png");
+}
+
+#intouch .update-found {
+	background-image: url("found-64.png");
+}
+
+#intouch .update-error {
+	background-image: url("warning-64.png");
+}
