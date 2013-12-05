@@ -47,6 +47,14 @@ class IntouchAdminareapagesDunModule extends WhmcsDunModule
 jQuery('#newclientform > table.form > tbody').append('$html');
 JAVASCRIPT;
 					$doc->addScriptDeclaration( $js );
+					
+					// Add in gid for existing client
+					$html	=	'<input type="hidden" name="groupidexisting" value="' . $choice . '" />';
+						
+					$js	= <<< JAVASCRIPT
+jQuery('#newclientform > table.form > tbody').append('$html');
+JAVASCRIPT;
+					$doc->addScriptDeclaration( $js );
 				}
 				
 				break;	// End quotes
@@ -90,7 +98,14 @@ JAVASCRIPT;
 					case 'save' :
 								
 						if ( $action == 'save' ) {
-							$gid	= $input->getVar( 'groupid', '0' );
+							
+							if ( $input->getVar( 'clienttype', 'existing' ) == 'existing' ) {
+								$gid	=	$input->getVar( 'groupidexisting', '0' );
+							}
+							else {
+								$gid	=	$input->getVar( 'groupid', '0' );
+							}
+							
 							$qid	= $input->getVar( 'id', false );
 							
 							// This is a new save
