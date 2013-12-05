@@ -183,6 +183,16 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			$content	= file_get_contents( $tmpl_path . 'viewinvoice.tpl' );
 			if ( strpos( $content, 'In Touch Customization and File Inclusion' ) === false ) {
 				rename( $tmpl_path . 'viewinvoice.tpl', $tmpl_path . 'viewinvoice.intouch.bak.tpl' );
+				
+				$regex	= array(
+						"/((<br \/><br \/><br \/><br \/><br \/>)\s+(<\/td>))/i" => '$2{$legal}$3',	// Portal and Classic Templates
+						"/(\{if \$notes\}\s<p>\{\$LANG.invoicesnotes\}: \{\$notes\}<\/p>\s\{\/if\}\s+\{\/if\})\s+(<\/div>)/i" => '$1{$legal}$2',	// Default Template
+				);
+				
+				foreach ( $regex as $f => $r )
+					$content	=	preg_replace($f, $r, $content, 1 );
+				
+				
 				$content	= $this->_getCustomCode( 'viewinvoice' ) . $content;
 				file_put_contents( $tmpl_path . 'viewinvoice.tpl', $content );
 			}
@@ -191,6 +201,14 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			$content	= file_get_contents( $tmpl_path . 'viewquote.tpl' );
 			if ( strpos( $content, 'In Touch Customization and File Inclusion' ) === false ) {
 				rename( $tmpl_path . 'viewquote.tpl', $tmpl_path . 'viewquote.intouch.bak.tpl' );
+				
+				$regex	= array(
+						"/((<br \/><br \/><br \/><br \/><br \/>)\s+(<\/td>))/i" => '$2{$legal}$3',
+				);
+				
+				foreach ( $regex as $f => $r )
+					$content	=	preg_replace($f, $r, $content, 1 );
+				
 				$content	= $this->_getCustomCode( 'viewquote' ) . $content;
 				file_put_contents( $tmpl_path . 'viewquote.tpl', $content );
 			}
@@ -287,14 +305,14 @@ HTML;
 				$data	= "{php} ";
 				$path	= "global \$smarty;
 
-\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
+\$path	=	dirname( dirname( realpath( \$smarty->template_dir ) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'quotes';
 				break;
 			case 'viewinvoice' :
 				$data	= "{php} ";
 				$path	= "global \$smarty;
 
-\$path	= dirname( \$smarty->template_dir ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
+\$path	=	dirname( realpath( \$smarty->template_dir ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 		} // End Header Build
@@ -361,6 +379,7 @@ CODE;
 			// Assign the custom logo and the custom payto variables to the template
 			\$sm->assign( 'logo', \$module->getLogoUrl() );
 			if ( \$addr	= \$module->getCustomAddress() ) \$sm->assign( 'payto', implode( "<br/>", \$addr ) );
+			if ( \$legal   = \$module->getLegalFooter() ) \$sm->assign( 'legal', htmlspecialchars_decode( \$legal) );
 CODE;
 			break;
 		endswitch;
