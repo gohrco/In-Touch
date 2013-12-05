@@ -106,7 +106,7 @@ class IntouchClientDunModule extends WhmcsDunModule
 			else return null;
 		}
 		else {
-			if ( $params->quoteeusefooter == '1' ) return $params->quotelegalfooter;
+			if ( $params->quoteusefooter == '1' ) return html_entity_decode( $params->quotelegalfooter );
 			else return null;
 		}
 	}
