@@ -117,7 +117,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			$result	=	$this->_sendPasswordEmail( $email, $vars, 'passwordbyadmin' );
 		}
 		else if ( $email->type == 'general' && $email->name == 'Password Reset Confirmation' ) {
-			$result	=	$this->_sendPasswordEmail( $email, $vars, 'password' );
+			$result	=	$this->_sendPasswordEmail( $email, $vars, 'pwresetconfirm' );
 		}
 		else if ( $email->type == 'general' && $email->name == 'Order Confirmation' ) {
 			$result	=	$this->_sendOrderEmail( $email, $vars, 'orderconfirm' );
@@ -704,6 +704,9 @@ STRING;
 				return $result;
 				
 				break;
+			case 'pwresetconfirm' :
+				return $this->_sendEmail( $email, $vars );
+				break;
 			case 'password' :
 				
 				// New password
@@ -752,6 +755,14 @@ STRING;
 				$regex			=	'#{\$client_password}#i';
 				$email->message	=	preg_replace( $regex, $new_password, $email->message );
 				$result			=	$this->_sendEmail( $email, $vars );
+				
+				// Update database now
+				$salt	=	$this->_generateRandom( 5 );
+				$md5	=	md5( $salt . $new_password ) . ':' . $salt;
+				$query	=	"UPDATE " . ( $iscontact ? "`tblcontacts`" : "`tblclients`" ) . " SET `password` = " . $db->Quote( $md5 ) . " WHERE `id` = " . $clientid;
+				
+				$db->setQuery( $query );
+				$db->query();
 				
 				return $result;
 				break;
