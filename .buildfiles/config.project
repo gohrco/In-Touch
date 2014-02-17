@@ -8,8 +8,8 @@ COPYRIGHT=2013 Go Higher Information Services, LLC.  All rights reserved.
 UPDATE_SITE=https://www.gohigheris.com/updates/whmcsmodules/intouch
 #
 SERIES=2.1
-SHORT=214
-VERSION=2.1.4
+SHORT=215
+VERSION=2.1.5
 #
 MATURITY=stable
 ACCESS=Public
