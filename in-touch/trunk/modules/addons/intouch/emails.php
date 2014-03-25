@@ -491,6 +491,11 @@ LANG;
 				$regex	=	'#{\$signature}#i';
 				$value	=	preg_replace( $regex, '{$intouchsignature}', $value );
 				$value	=	'{$intouchstyle}{$intouchheader}' . $value . '{$intouchfooter}{$intouchlegal}';
+				
+				// WHMCS is now replacing line breaks with HTML
+				if ( version_compare( DUN_ENV_VERSION, '5.3', 'ge' ) ) {
+					$value	=	str_replace( "\r\n", "", $value );
+				}
 			}
 			
 			$emailvars['custom' . $item] = $value;
@@ -656,15 +661,18 @@ STRING;
 				
 				// Grab the password
 				$passwd	=	$input->getVar( 'password', false );
+				$regex	=	'#{\$client_password}#i';
 				
 				// If we don't have it for some reason get outta here
 				if ( $passwd === false ) {
 					// ---- BEGIN INTOUCH-4
 					//		Client Signup Email doesn't go out from summary page in admin area
 					// Change out the password
-					$regex			=	'#{\$client_password}#i';
 					$email->message	=	preg_replace( $regex, $passwd, $email->message );
 					// ---- END INTOUCH-4
+				}
+				else {
+					$email->message	=	preg_replace( $regex, $passwd, $email->message );
 				}
 				
 				return $this->_sendEmail( $email, $vars );
