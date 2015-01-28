@@ -286,13 +286,15 @@ HTML;
 		// Build the header first
 		switch ( $type ) {
 			case 'quotepdf' :
-				$data	= "<?php ";
-				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
+				$data	=	"<?php ";
+				$path	=	"\$path	=	( isset( \$this->template_dir ) ? rtrim( dirname( \$this->template_dir ), DIRECTORY_SEPARATOR ) : dirname( dirname( __DIR__ ) ) );"
+						.	"\$path	.=	DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'quotes';
 				break;
 			case 'invoicepdf' :
 				$data	= "<?php ";
-				$path	= "\$path		=	dirname( dirname( dirname(__FILE__) ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
+				$path	=	"\$path	=	( isset( \$this->template_dir ) ? rtrim( dirname( \$this->template_dir ), DIRECTORY_SEPARATOR ) : dirname( dirname( __DIR__ ) ) );"
+						.	"\$path	.=	DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
 				$module	= 'invoices';
 				break;
 			case 'viewquote' :
