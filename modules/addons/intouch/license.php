@@ -65,7 +65,7 @@ class IntouchLicenseDunModule extends IntouchAdminDunModule
 	 * @return		string containing formatted output
 	 * @since		2.0.0
 	 */
-	public function render()
+	public function render( $data = null )
 	{
 		$data	= $this->buildBody();
 		

@@ -41,7 +41,7 @@ class IntouchDefaultDunModule extends IntouchAdminDunModule
 	 * @return		string containing formatted output
 	 * @since		2.0.0
 	 */
-	public function render()
+	public function render( $data = null )
 	{
 		$doc	= dunloader( 'document', true );
 		$doc->addStyleDeclaration( "#intouch .row .well-small h3 {margin: 0; padding: 0; }" );
