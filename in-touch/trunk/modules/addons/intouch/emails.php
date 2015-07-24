@@ -472,6 +472,9 @@ LANG;
 	 */
 	private function _sendEmail( $email, $vars )
 	{
+		global $CONFIG;
+		
+		$oldCONFIG	=	$CONFIG;
 		$config		=	dunloader( 'config', 'intouch' );
 		
 		// Grab our intended API User
@@ -483,6 +486,16 @@ LANG;
 		foreach ( $email as $item => $value ) {
 			// No id or name...
 			if ( in_array( $item, array( 'id', 'name' ) ) ) continue;
+			
+			if ( $item == 'fromname' ) {
+				$CONFIG["CompanyName"]	=	$value;
+				continue;
+			}
+			
+			if ( $item == 'fromemail' ) {
+				$CONFIG["Email"]	=	$value;
+				continue;
+			}
 			
 			// Dont add empty parts
 			if ( empty( $value ) ) continue;
