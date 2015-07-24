@@ -39,12 +39,20 @@
 			<echo message="=====================================================" />
 	</target>
 	
-	<target name="deploy_project" depends="build_project">
+	<target name="deploy_project" depends="package_project">
 			<echo message="=====================================================" />
 			<echo message="Begin Deployment of Project" />
 			<echo message="=====================================================" />
+		
+		<!-- Deploy our files after building and packaging -->
 		<antcall target="deploy_all" />
-		<antcall target="deploy_dunamis" />
+		
+		<!-- Tag our source in the repo -->
+		<antcall target="intouch_tag" />
+		
+		<!-- Add this version to our JIRA Issues site -->
+		<antcall target="issues_intouch_addversion" />
+		
 			<echo message="=====================================================" />
 			<echo message="Completed Deployment of Project" />
 			<echo message="=====================================================" />

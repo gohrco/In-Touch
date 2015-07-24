@@ -5,6 +5,7 @@
 		<attribute name="raw" default="C:\xampp\raw.php" />
 		<attribute name="dest" default="" />
 		<attribute name="version" default="${v.VERSION_REVLONG}" />
+		<attribute name="shortver"	default="${project.SERIES}" />
 		
 		<sequential>
 			<delete file="@{raw}" />
@@ -14,6 +15,7 @@
 						<token key="projectName" value="${p.PROJECT_NAME}" />
 						<token key="fileVers" value="@{version}" />
 						<token key="mainVers" value="${v.VERSION_REVMAIN}" />
+						<token key="shortVers" value="@{shortver}" />
 						<token key="buildDate" value="${TODAY}" />
 						<token key="copyWrite" value="${p.PROJECT_CPWRITE}" />
 						<token key="buildAuthor" value="${p.PROJECT_AUTHOR}" />
@@ -25,7 +27,7 @@
 					</replacetokens>
 				</filterchain>
 			</copy>
-			<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 7.0\ioncube_encoder5.exe">
+			<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 9.0.0\legacy\ioncube_encoder53.exe">
 				<arg value='--preamble-file="C:\xampp\preamble.txt"' />
 				<arg value="@{raw}" />
 				<arg value="-o" />
