@@ -83,7 +83,7 @@ class IntouchAjaxDunModule extends IntouchAdminDunModule
 	 * @since		2.0.0
 	 * @see			IntouchAdminDunModule :: render()
 	 */
-	public function render()
+	public function render( $data = null )
 	{
 		$data	=	array();
 		
