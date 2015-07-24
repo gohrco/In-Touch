@@ -10,6 +10,7 @@
 		<attribute name="package" default="${project.NAME}" />
 		<attribute name="license" default="${project.LICENSE}" />
 		<attribute name="version" default="${project.VERSION}" />
+		<attribute name="shortver"	default="${project.SERIES}" />
 		
 		<sequential>
 			<delete dir="@{raw}" />
@@ -35,6 +36,7 @@
 						<token key="projectName" value="${project.NAME}" />
 						<token key="packageName" value="@{package}" />
 						<token key="fileVers" value="@{version}" />
+						<token key="shortVers" value="@{shortver}" />
 						<token key="mainVers" value="@{version}" />
 						<token key="buildDate" value="${TODAY}" />
 						<token key="copyRight" value="${project.COPYRIGHT}" />
@@ -49,7 +51,7 @@
 			<delete dir="@{destination}" />
 			<mkdir dir="@{destination}" />
 			
-			<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 7.0\ioncube_encoder5.exe">
+			<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 9.0.0\legacy\ioncube_encoder53.exe">
 				<arg value='--preamble-file="C:\xampp\preamble.txt"' />
 				<arg value="--merge-target" />
 				<arg value='--ignore=".svn/"' />

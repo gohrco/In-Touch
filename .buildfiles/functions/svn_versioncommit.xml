@@ -1,0 +1,23 @@
+<project>
+
+	<macrodef name="svn_versioncommit">
+		<!-- File Structure -->
+		<attribute name="repo" default="${local.LOCATION_PACKAGES}" />
+		<attribute name="folder" default="v${project.VERSION}" />
+		<attribute name="message" default="${project.NAME} version ${project.VERSION} released!" />
+		
+		<sequential>
+			
+			<exec executable="svn">
+				<arg line="add @{repo}@{folder}" />
+			</exec>
+			
+			<exec executable="svn">
+				<arg line="ci @{repo} -m '@{message}'" />
+			</exec>
+			
+		</sequential>
+		
+	</macrodef>
+	
+</project>
