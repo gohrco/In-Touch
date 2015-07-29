@@ -10,10 +10,8 @@
 			<echo message="Begin Building WHMCS Addon Module" />
 			<echo message="-----------------------------------------------------" />
 		
-		<repl_module_file src=".buildfiles/builds/preamble.txt" destination="C:/xampp/preamble.txt" />
-		
-		<ioncube_dir />
-		<licensing src="modules/addons/intouch/dunamis/license.php" dest="modules/addons/intouch/dunamis/license.php" />
+		<antcall target="build_intouch_ioncube" />
+		<antcall target="build_intouch_opensrc" />
 		
 			<echo message=" " />
 			<echo message="Begin Building WHMCS Addon Module" />
@@ -33,4 +31,32 @@
 			<echo message=" " />
 			<echo message=" " />
 	</target>
+	
+	
+	<!-- ====================================================================
+			Build In Touch with IonCube
+		 ====================================================================
+	-->
+	<target name="build_intouch_ioncube" unless="noioncube">
+		
+		<repl_module_file src=".buildfiles/builds/preamble.txt" destination="C:/xampp/preamble.txt" />
+		
+		<ioncube_dir />
+		<licensing src="modules/addons/intouch/dunamis/license.php" dest="modules/addons/intouch/dunamis/license.php" />
+		
+	</target>
+	
+	
+	
+	<!-- ====================================================================
+			Build In Touch without IonCube
+		 ====================================================================
+	-->
+	<target name="build_intouch_opensrc" if="noioncube">
+		
+		<repl_dir />
+		<licensing src="modules/addons/intouch/dunamis/license.php" dest="modules/addons/intouch/dunamis/license.php" encode="false" />
+		
+	</target>
+	
 </project> 

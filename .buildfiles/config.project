@@ -7,9 +7,11 @@ LICENSE=GNU General Public License version 2, or later
 COPYRIGHT=2013 Go Higher Information Services, LLC.  All rights reserved.
 UPDATE_SITE=https://www.gohigheris.com/updates/whmcsmodules/intouch
 #
-SERIES=2.1
-SHORT=215
-VERSION=2.1.5
+SVNREPO=https://go-higher.svn.beanstalkapp.com/whmcs-modules/in-touch/
+#
+SERIES=2.2
+SHORT=220
+VERSION=2.2.0
 #
 MATURITY=stable
 ACCESS=Public

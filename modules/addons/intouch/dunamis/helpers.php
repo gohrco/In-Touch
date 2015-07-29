@@ -38,6 +38,7 @@ function createChecksum( $item )
 /**
  * Provides a means to get the data group from the database
  * @version		@fileVers@
+ * @version		2.2.0		We dropped the default of 0 and the check for the groupid of 0 so non-grouped groups can be customized
  * @param		integer		$groupid		The group id we are looking for (or the row id)
  * @param		boolean		$bygroupid		True indicates we are looking for the group by group id, false by row id (default to true)
  * 
@@ -45,9 +46,10 @@ function createChecksum( $item )
  * @since		2.1.3
  */
 if (! function_exists( 'getGroupData' ) ) {
-function getGroupData( $groupid = 0, $bygroupid = true )
+function getGroupData( $groupid, $bygroupid = true )
 {
-	if ( $groupid === 0 ) return false;
+	// Dropped 2.2.0
+	//if ( $groupid === 0 ) return false;
 	
 	$data	=	array();
 	$db		=	dunloader( 'database', true );
@@ -75,4 +77,43 @@ function getGroupData( $groupid = 0, $bygroupid = true )
 	
 	return $data[$groupid];
 }
+}
+
+
+/**
+ * Function to get the short version number
+ * @version		@fileVers@
+ *
+ * @return		string
+ * @since		2.2.00
+ */
+if (! function_exists( 'get_version' ) ) {
+	function get_version()
+	{
+		static $version = null;
+
+		if ( $version == null ) {
+			$curversion	=	substr( DUN_ENV_VERSION, 0, 3 );
+
+			$path	=	dirname( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR
+			.	'templates' . DIRECTORY_SEPARATOR;
+
+			if ( is_dir( $path . $curversion ) ) {
+				$version	=	$curversion;
+			}
+			else {
+				$dh		=	opendir( $path );
+				$dirs	=	array();
+				while ( false !== ( $file = readdir( $dh ) ) ) {
+					if ( in_array( $file, array( '.', '..' ) ) ) continue;
+					if (! is_dir( $path . DIRECTORY_SEPARATOR . $file ) ) continue;
+					$dirs[]	=	$file;
+				}
+				rsort( $dirs );
+				$version	=	array_shift( $dirs );
+			}
+		}
+
+		return $version;
+	}
 }

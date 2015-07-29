@@ -25,6 +25,10 @@
 class IntouchInstallDunModule extends WhmcsDunModule
 {
 	
+	private $destinationpath;
+	private $sourcepath;
+	
+	
 	/**
 	 * Performs module activation
 	 * @access		public
@@ -34,14 +38,6 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	 */
 	public function activate()
 	{
-		// Lets customize our files first
-		if ( ( $checksum = $this->_customiseFiles() ) === false ) {
-			// Problem so dont continue;
-			return false;
-		}
-		
-		$this->_customiseEmails();
-		
 		// Load the database handler
 		$db	= dunloader( 'database', true );
 		
@@ -58,6 +54,23 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			$db->setQuery( "INSERT INTO `mod_intouch_settings` ( `key`, `value` ) VALUES (" . $db->Quote( $key ) . ", " . $db->Quote( $value ) . " )" );
 			$db->query();
 		}
+		
+		// Template time
+		$files			=	$this->_getTemplatefiles();
+		
+		foreach ( $files as $file ) {
+			// If this is an upgrade or we have already copied the files in place for some reason don't do it again
+			if ( $this->_isFilesizesame( $file ) ) {
+				@unlink( $this->sourcepath . $file );
+				continue;
+			}
+				
+			$this->fixFile( $file );
+				
+			continue;
+		}
+		
+		$this->_customiseEmails();
 		
 		// Serialize array for storage
 		$checksum	= serialize( $checksum );
@@ -83,14 +96,63 @@ class IntouchInstallDunModule extends WhmcsDunModule
 			$db->handleFile( 'sql' . DIRECTORY_SEPARATOR . 'uninstall.sql', 'intouch' );
 		}
 		
-		// Lets undo our customized files first
-		if (! $this->_revertFiles() ) {
-			// Problem so dont continue;
-			return false;
+		// Template time
+		$files			=	$this->_getTemplatefiles( null, 'bak' );
+		
+		foreach ( $files as $file ) {
+				
+			// Since we have an array of .bak files, we need to figure the actual filename
+			$actualfile	=	str_replace( '.bak', '', $file );
+				
+			// Use the original 'bak' file as it should be our first one
+			$backupfile	=	$this->sourcepath . $file;
+				
+			// Move the current file to the source position
+			@unlink( $this->destinationpath . $actualfile );
+		
+			// Move the backup file to the current position
+			@rename( $backupfile, $this->destinationpath . $actualfile );
 		}
 		
 		$this->_revertEmails();
 		
+		return true;
+	}
+	
+	
+	/**
+	 * Method for moving a single file into place
+	 * @access		public
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		string		- $file: subpath of the file / filename to handle
+	 *
+	 * @return		boolean
+	 * @since		2.2.0
+	 */
+	public function fixFile( $file )
+	{
+		// Watch for the first backups (original files)
+		if ( file_exists( $this->sourcepath . $file . '.bak' ) ) {
+			$backupfile	=	$this->sourcepath . $file . '.' . DUN_MOD_JWHMCS;
+	
+			// Be sure this isn't some sort of issue
+			if ( file_exists( $backupfile ) ) {
+				@unlink( $backupfile );
+			}
+		}
+		else {
+			$backupfile	=	$this->sourcepath . $file . '.bak';
+		}
+	
+		// We may be putting new files in place... so be sure the destination is there before renaming it
+		if ( file_exists( $this->destinationpath . $file ) ) {
+			// Move the current file into the backup position
+			@rename( $this->destinationpath . $file, $backupfile );
+		}
+			
+		// Move the new to current position
+		@copy( $this->sourcepath . $file, $this->destinationpath . $file );
+	
 		return true;
 	}
 	
@@ -102,7 +164,16 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	 *
 	 * @since		2.0.0
 	 */
-	public function initialise() { }
+	public function initialise()
+	{
+		// Template time
+		$this->sourcepath		=	dirname( __FILE__ ) . DIRECTORY_SEPARATOR
+								.	'templates' . DIRECTORY_SEPARATOR
+								.	get_version() . DIRECTORY_SEPARATOR;
+		$this->destinationpath	=	DUN_ENV_PATH
+								.	'templates'	. DIRECTORY_SEPARATOR;
+		
+	}
 	
 	
 	/**
@@ -164,6 +235,7 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	
 	/**
 	 * Method to customize the viewinvoice.tpl files in each template folder
+	 * @deprecated	2.2.0
 	 * @access		private
 	 * @version		@fileVers@
 	 * 
@@ -171,6 +243,7 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	 */
 	private function _customiseFiles()
 	{
+		/*
 		$tmpl_root	= ROOTDIR . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
 		$tmpl_dirs	= $this->_getTemplateDirs();
 		$file_todo	= array( 'viewinvoice', 'invoicepdf' );
@@ -269,12 +342,13 @@ HTML;
 			}
 		}
 		
-		return true;
+		return true;*/
 	}
 	
 	
 	/**
 	 * Method for gathering the customized view invoice code
+	 * @deprecated	2.2.0
 	 * @access		private
 	 * @version		@fileVers@
 	 * 
@@ -283,6 +357,7 @@ HTML;
 	 */
 	private function _getCustomCode( $type = 'viewinvoice' )
 	{
+		/*
 		// Build the header first
 		switch ( $type ) {
 			case 'quotepdf' :
@@ -329,7 +404,7 @@ HTML;
  *	Should the Dunamis Framework or In Touch be
  *	removed, this file should function without
  *	causing any errors.
- */
+ *\/
 		
 // We must have the Dunamis Framework so lets build the path
 $path
@@ -390,7 +465,7 @@ CODE;
  *	=========================================
  *	End of In Touch Customization Section
  *	=========================================
- */
+ *\/
 CODE;
 		
 		switch ( $type ) {
@@ -411,7 +486,7 @@ CODE;
 				$data .= ' {/php}';
 				break;
 		} // End Footer build
-		return $data;
+		return $data;*/
 	}
 	
 	
@@ -447,6 +522,7 @@ CODE;
 	
 	/**
 	 * Method to get the template directory names
+	 * @deprecated	2.2.0
 	 * @access		private
 	 * @version		@fileVers@
 	 * 
@@ -455,6 +531,7 @@ CODE;
 	 */
 	private function _getTemplateDirs()
 	{
+		/*
 		$tmpl_dirs	= array();
 		$tmpl_root	= ROOTDIR . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
 		
@@ -469,6 +546,40 @@ CODE;
 		closedir( $dh );
 		
 		return $tmpl_dirs;
+		*/
+	}
+	
+	
+	/**
+	 * Method to gather tpl files for moving around
+	 * @access		private
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		string		- $subdir: any recursive subdirs
+	 * @param		string		- $type: indicates what we are looking for [tpl|bak]
+	 *
+	 * @return		array
+	 * @since		2.2.0
+	 */
+	private function _getTemplatefiles( $subdir = null, $type = 'tpl' )
+	{
+		$files	=	array();
+		$path	=	$this->sourcepath
+		.	$subdir;
+	
+		$dh	=	scandir( $path );
+	
+		foreach ( $dh as $file ) {
+			if ( in_array( $file, array( '.', '..', 'custom.css', 'custom.css.new' ) ) ) continue;
+			if ( is_dir( $path . $file ) ) {
+				$files	=	array_merge( $files, $this->_getTemplatefiles( $subdir . $file . DIRECTORY_SEPARATOR, $type ) );
+				continue;
+			}
+			$info	=	pathinfo( $file );
+			if ( $info['extension'] != $type ) continue;
+			$files[]	=	$subdir . $file;
+		}
+	
+		return $files;
 	}
 	
 	
@@ -521,6 +632,25 @@ CODE;
 	
 	
 	/**
+	 * Method for testing if the file size is the same
+	 * @access		private
+	 * @version		@fileVers@ ( $id$ )
+	 * @param		string		- $file: relative path to file
+	 *
+	 * @return		bool
+	 * @since		2.5.0
+	 */
+	private function _isFilesizesame( $file = null )
+	{
+		// If the destination doesnt exist it cant be the same
+		if (! file_exists( $this->destinationpath . $file ) ) {
+			return false;
+		}
+		return md5_file( $this->sourcepath . $file ) == md5_file( $this->destinationpath . $file );
+	}
+	
+	
+	/**
 	 * Method to change these email templates back
 	 * @access		private
 	 * @version		@fileVers@
@@ -546,6 +676,7 @@ CODE;
 	
 	/**
 	 * Method to revert the viewinvoices files back
+	 * @deprecated	2.2.0
 	 * @access		private
 	 * @version		@fileVers@
 	 * 
@@ -554,6 +685,7 @@ CODE;
 	 */
 	private function _revertFiles()
 	{
+		/*
 		$tmpl_root	= ROOTDIR . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
 		$tmpl_dirs	= $this->_getTemplateDirs();
 		$file_todo	= array( 'viewinvoice', 'invoicepdf', 'viewquote', 'quotepdf' );
@@ -570,5 +702,6 @@ CODE;
 		}
 		
 		return true;
+		*/
 	}
 }

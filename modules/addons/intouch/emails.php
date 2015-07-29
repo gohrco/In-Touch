@@ -160,12 +160,23 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	{
 		$db				=	dunloader( 'database', true );
 		$merge_fields	=	array();
+		$msgname		=	$vars['messagename'];
 		
-		$db->setQuery( "SELECT * FROM `tblemailtemplates` WHERE `name` = " . $db->Quote( $vars['messagename'] ) );
-		$email	=	$db->loadObject();
+		if ( version_compare( DUN_ENV_VERSION, '6.0', 'ge' ) ) {
+			$email		=	new stdClass();
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( strpos( $k, 'custom' ) === false ) continue;
+				$k	=	str_replace( 'custom', '', $k );
+				$email->$k	=	$v;
+			}
+		}
+		else {
+			$db->setQuery( "SELECT * FROM `tblemailtemplates` WHERE `name` = " . $db->Quote( $msgname ) );
+			$email	=	$db->loadObject();
+		}
 		
 		// Test message to see if this is our customization or a Mass Email through WHMCS tool
-		if ( strpos( $email->message, '{$intouchheader}' ) === false ) {
+		if ( $email && strpos( $email->message, '{$intouchheader}' ) === false ) {
 			// We are HIJACKING the Mass Mail Tool
 			global $massmailquery;
 			
@@ -485,14 +496,14 @@ LANG;
 		$emailvars = array();
 		foreach ( $email as $item => $value ) {
 			// No id or name...
-			if ( in_array( $item, array( 'id', 'name' ) ) ) continue;
+			if ( in_array( $item, array( 'id', 'name', 'created_at', 'updated_at' ) ) ) continue;
 			
-			if ( $item == 'fromname' ) {
+			if ( $item == 'fromname' && $value ) {
 				$CONFIG["CompanyName"]	=	$value;
 				continue;
 			}
 			
-			if ( $item == 'fromemail' ) {
+			if ( $item == 'fromemail' && $value ) {
 				$CONFIG["Email"]	=	$value;
 				continue;
 			}
