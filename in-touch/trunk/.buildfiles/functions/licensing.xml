@@ -8,6 +8,7 @@
 		<attribute name="source" default="${src.dev}/@{src}" />
 		<attribute name="destination" default="${dst.build}/@{dest}" />
 		<attribute name="shortver"	default="${project.SERIES}" />
+		<attribute name="encode"	default="true" />
 		
 		<sequential>
 			
@@ -51,13 +52,21 @@
 				</filterchain>
 			</copy>
 			
-			<!-- Ioncube the file also -->
-			<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 9.0.0\legacy\ioncube_encoder53.exe">
-				<arg value='--preamble-file="C:\xampp\preamble.txt"' />
-				<arg value="@{raw}\licensing.php" />
-				<arg value="-o" />
-				<arg value="@{destination}" />
-			</exec>
+			<if>
+				<equals arg1="@{encode}" arg2="true" />
+				<then>
+					<!-- Ioncube the file also -->
+					<exec executable="C:\Program Files (x86)\ionCube PHP Encoder 9.0.0\legacy\ioncube_encoder53.exe">
+						<arg value='--preamble-file="C:\xampp\preamble.txt"' />
+						<arg value="@{raw}\licensing.php" />
+						<arg value="-o" />
+						<arg value="@{destination}" />
+					</exec>
+				</then>
+				<else>
+					<copy file="@{raw}\licensing.php" tofile="@{destination}" />
+				</else>
+			</if>
 			
 			<!-- All done... :-) -->
 			<delete file="@{raw}\licensing.php" />

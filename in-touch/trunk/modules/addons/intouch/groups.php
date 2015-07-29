@@ -174,7 +174,6 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 				else {
 					$form->setItem( 'invoicelegalfooter', false, 'intouch.group', 'enable' );
 					$form->setItem( 'quotelegalfooter', false, 'intouch.group', 'enable' );
-					$this->_handleHiddenWysiwyg();
 					
 					$doc	=	dunloader( 'document', true );
 					$doc->addScriptDeclaration( <<< JS
@@ -198,6 +197,8 @@ JS
 						.			'<a href="' . $uri->toString() . '" class="btn pull-right span2">' . t( 'intouch.form.close' ) . '</a>'
 						.		'</div>'
 						.	'</form>';
+				
+				$this->_handleHiddenWysiwyg();
 				
 				break;
 			// Default task
@@ -339,6 +340,7 @@ JS;
 		
 		if ( version_compare( DUN_ENV_VERSION, '5.2', 'ge' ) ) {
 			$js	= <<< JS
+jQuery("document").ready( function() {
 jQuery('#params').next().next().bind( 'click', function() {
 	tinyMCE.init({
 		mode : "exact",
@@ -375,6 +377,7 @@ jQuery('#params').next().next().next().bind( 'click', function() {
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : true
 	});
+});
 });
 JS;
 		}

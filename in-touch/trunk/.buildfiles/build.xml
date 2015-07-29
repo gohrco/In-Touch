@@ -14,10 +14,12 @@
 			<echo message="=====================================================" />
 	</target>
 	
-	<target name="copy_project" depends="build_project">
+	<target name="copy_project">
 			<echo message="=====================================================" />
 			<echo message="Begin Copying Project" />
 			<echo message="=====================================================" />
+		<property name="noioncube" value="true" />
+		<antcall target="build_project" />
 		<antcall target="copy_all" />
 		
 		<property name="copy.destination" value="mods" />

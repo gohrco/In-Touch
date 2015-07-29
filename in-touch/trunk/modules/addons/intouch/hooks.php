@@ -11,6 +11,10 @@ if ( function_exists( 'get_dunamis' ) )
 	// Load Dunamis
 	get_dunamis( 'intouch' );
 	
+	//$config	=	dunloader( 'config', true );
+	//$config->set( 'AllowSmartyPhpTags', 1 );
+	//$GLOBALS['CONFIG']['AllowSmartyPhpTags'] = 1;
+	
 	// Run the admin controller
 	if ( is_admin() ) {
 		dunmodule( 'intouch.adminareapages' )->execute();
