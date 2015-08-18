@@ -21,6 +21,9 @@
 		<property name="config.project" location="config.project" />
 		<property file="${config.project}" prefix="project" />
 		
+		<property name="config.jira" location="config.jira" />
+		<property file="${config.jira}" prefix="jira" />
+		
 	</target>
 	
 	<!-- Import Build Files -->
