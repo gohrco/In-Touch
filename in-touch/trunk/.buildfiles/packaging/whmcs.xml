@@ -4,9 +4,18 @@
 	
 	<import file="../includes.xml" />
 	
-	<target name="package_whmcs" depends="properties">
+	<target name="package_whmcs" depends="properties,dunamis_properties">
 		
 		<fileset dir="${src.build}/" id="whmcsfiles">
+			<include name="**/*.*" />
+		</fileset>
+		
+		<fileset dir="${dunamis.src.build}/" id="dunamiscorefiles">
+			<include name="dunamis/**/*.*" />
+			<include name="*.*" />
+		</fileset>
+		
+		<fileset dir="${dunamis.src.build}/whmcs/" id="dunamiswhmcsfiles">
 			<include name="**/*.*" />
 		</fileset>
 		
@@ -18,6 +27,11 @@
 		<echo message="[2]  Copying Build to Temporary Directory" />
 		<copy todir="${dst.package}/WHMCS">
 			<fileset refid="whmcsfiles" />
+			<fileset refid="dunamiswhmcsfiles" />
+		</copy>
+		
+		<copy todir="${dst.package}/WHMCS/includes/">
+			<fileset refid="dunamiscorefiles" />
 		</copy>
 		
 		<fileset dir="${dst.package}/WHMCS" id="packagefiles">
