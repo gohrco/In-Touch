@@ -118,6 +118,7 @@ class IntouchAdminDunModule extends WhmcsDunModule
 		
 		$doc->addStyleDeclaration( '#contentarea > div > h1, #content > h1 { display: none; }' );	// Wipes out WHMCS' h1
 		$doc->addStyleDeclaration( '.contentarea > h1 { display: none; }' );	// Wipes out WHMCS' h1 in 5.0.3
+		$doc->addStylesheet( get_baseurl( 'intouch' ) . 'assets/admin.css' );
 		
 		return 		'<div style="float:left;width:100%;">'
 				.	'<div id="intouch">'

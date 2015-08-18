@@ -52,6 +52,22 @@ $form	= array(
 				'label'			=> 'intouch.admin.form.group.params.label',
 				),
 		'paramsoptn1'	=> array( 'order'	=> 100, 'class'	=> 'well well-small', 'type'	=> 'wrapo' ),
+		'emailname'		=>	array(
+				'order'		=> 102,
+				'type'		=> 'text',
+				'value'		=> '',
+				'validation'	=> '',
+				'label'			=> 'intouch.admin.form.group.label.emailname',
+				'description'	=> 'intouch.admin.form.group.desc.emailname',
+		),
+		'emailfrom'		=>	array(
+				'order'		=> 108,
+				'type'		=> 'text',
+				'value'		=> '',
+				'validation'	=> '',
+				'label'			=> 'intouch.admin.form.group.label.emailfrom',
+				'description'	=> 'intouch.admin.form.group.desc.emailfrom',
+			),
 		'emailcss' => array(
 				'order'			=> 110,
 				'type'			=> 'textarea',

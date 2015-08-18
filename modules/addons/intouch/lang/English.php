@@ -244,6 +244,14 @@ $lang['admin.form.group.label.quoteusefooter']		=	'Enable Legal Footer';
 $lang['admin.form.group.desc.quoteusefooter']		=	'Enable this option to include a legal footer at the bottom of your quotes.';
 $lang['admin.form.group.label.quotelegalfooter']	=	'Legal Footer';
 $lang['admin.form.group.desc.quotelegalfooter']		=	'Enter what you would like to use for the legal footer on your quotes.';
+//
+//	2.2.0
+//	------------------------------------------------------------------------
+$lang['admin.form.group.label.emailname']		=	'Email From Name';
+$lang['admin.form.group.desc.emailname']		=	'This setting permits you to specify a name that an email is from for emails sent to clients that belong to this group.  Note that if you dont specify a name here, that WHMCS will use your system settings.  Also note that for support tickets, this name will be used followed by the settings in the support department.  Also note that if you have a specific name set in the email template that is being sent to a customer that this setting will NOT be used, and the setting in the email template will be used instead.';
+$lang['admin.form.group.label.emailfrom']		=	'Email From Address';
+$lang['admin.form.group.desc.emailfrom']		=	'This setting permits you to specify an email address for emails sent to clients that belong to this group.  Note that if you dont specify an email address here, that WHMCS will use your system settings.  Also note that for support tickets, this will not be used but instead the department email address will be used.  Also note that if you have a specific email address set in the email template that is being sent to a customer that this setting will NOT be used, and the setting in the email template will be used instead.';
+
 
 //	------------------------------------------------------------------------
 //	Admin Area Pages
