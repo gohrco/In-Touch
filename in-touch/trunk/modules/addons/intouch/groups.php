@@ -64,7 +64,7 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 				if ( in_array( $name, $check ) ) continue;
 				$paramnames[]	= $name;
 			}
-				
+			
 			foreach ( $paramnames as $name ) {
 				$params[$name]	= $input->getVar( $name, null, 'post', 'html' );
 				

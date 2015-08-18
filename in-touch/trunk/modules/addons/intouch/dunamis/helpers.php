@@ -46,7 +46,7 @@ function createChecksum( $item )
  * @since		2.1.3
  */
 if (! function_exists( 'getGroupData' ) ) {
-function getGroupData( $groupid, $bygroupid = true )
+function getGroupData( $groupid, $bygroupid = true, $decode = false )
 {
 	// Dropped 2.2.0
 	//if ( $groupid === 0 ) return false;
@@ -70,6 +70,13 @@ function getGroupData( $groupid, $bygroupid = true )
 		}
 		else {
 			$data[$row->id]	=	$row;
+		}
+	}
+	
+	if ( $decode && isset( $data[$groupid] ) ) {
+		$params	=	json_decode( $data[$groupid]->params );
+		foreach ( $params as $k => $v ) {
+			$data[$groupid]->$k = $v;
 		}
 	}
 	

@@ -384,9 +384,11 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		}
 		
 		$db->setQuery( "SELECT `groupid` FROM `tblclients` WHERE `id` = " . $db->Quote( $userid ) );
-		$group	= $db->loadResult();
+		return (int) $db->loadResult();
 		
-		return $group == null ? false : $group;
+		//$group	= $db->loadResult();
+		
+		//return $group == null ? false : $group;
 	}
 	
 	
@@ -491,6 +493,17 @@ LANG;
 		// Grab our intended API User
 		if ( ( $apiuser = $config->get( 'apiuser' ) ) === false ) {
 			$apiuser	= '1';
+		}
+		
+		$groupid	=	$this->_getGroupId( $email->type, $vars['relid'] );
+		$group		=	getGroupData( $groupid, true, true );
+		
+		if ( $group->emailname ) {
+			$CONFIG['CompanyName']	=	$group->emailname;
+		}
+		
+		if ( $group->emailfrom ) {
+			$CONFIG['Email']	=	$group->emailfrom;
 		}
 		
 		$emailvars = array();
