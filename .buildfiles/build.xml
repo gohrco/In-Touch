@@ -52,9 +52,6 @@
 		<!-- Tag our source in the repo -->
 		<antcall target="intouch_tag" />
 		
-		<!-- Add this version to our JIRA Issues site -->
-		<antcall target="issues_intouch_addversion" />
-		
 			<echo message="=====================================================" />
 			<echo message="Completed Deployment of Project" />
 			<echo message="=====================================================" />

@@ -7,7 +7,7 @@
 		<sequential>
 			
 			<exec executable="svn">
-				<arg line="up @{repo}" />
+				<arg line="up &quot;@{repo}&quot;" />
 			</exec>
 			
 		</sequential>
