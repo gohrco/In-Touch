@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Module:  Deploy All" basedir=".">
+	
+	<import file="../includes.xml" />
+	
+	<target name="deploy_all" depends="properties">
+			
+			<echo message=" " />
+			<echo message="Begin Deploying WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			
+		<!-- Commit our archives for deployment to customers -->
+		<svn_update />
+		<svn_versioncommit />
+		<svn_update />
+		
+		<!-- Tag our version in our repo -->
+		<svn_tag />
+		
+		<!-- Add version to our JIRA site -->
+		<jira_update />
+		
+			
+			<echo message=" " />
+			<echo message="Begin Deploying WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			<echo message=" " />
+			<echo message=" " />
+	</target> 
+	
+</project> 

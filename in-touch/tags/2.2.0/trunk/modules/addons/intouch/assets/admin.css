@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+
+/* Undo Bootstrap 2.3.1 input field heights */
+#intouch select,
+#intouch textarea,
+#intouch input[type="text"],
+#intouch input[type="password"],
+#intouch input[type="datetime"],
+#intouch input[type="datetime-local"],
+#intouch input[type="date"],
+#intouch input[type="month"],
+#intouch input[type="time"],
+#intouch input[type="week"],
+#intouch input[type="number"],
+#intouch input[type="email"],
+#intouch input[type="url"],
+#intouch input[type="search"],
+#intouch input[type="tel"],
+#intouch input[type="color"],
+#intouch .uneditable-input {
+	height: inherit;
+	line-height: inherit;
+}

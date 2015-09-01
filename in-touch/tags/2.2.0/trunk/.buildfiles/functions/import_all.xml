@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Function_Inclusion" basedir=".">
+
+	<import file="build_changelog.xml" />
+	<import file="create_release.xml" />
+	<import file="ioncube_dir.xml" />
+	<import file="jira_update.xml" />
+	<import file="licensing.xml" />
+	<import file="repl_dir.xml" />
+	<import file="repl_file.xml" />
+	<import file="svn_tag.xml" />
+	<import file="svn_update.xml" />
+	<import file="svn_versioncommit.xml" />
+	<import file="zipr_file.xml" />
+	
+</project>

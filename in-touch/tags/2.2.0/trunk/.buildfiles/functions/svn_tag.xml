@@ -1,0 +1,19 @@
+<project>
+
+	<macrodef name="svn_tag">
+		<!-- File Structure -->
+		<attribute name="repo" default="${project.SVNREPO}" />
+		<attribute name="version" default="${project.VERSION}" />
+		<attribute name="message" default="${project.NAME} version ${project.VERSION} tagged!" />
+		
+		<sequential>
+			
+			<exec executable="svn">
+				<arg line="cp @{repo}trunk @{repo}tags/@{version} -m '@{message}'" />
+			</exec>
+			
+		</sequential>
+		
+	</macrodef>
+	
+</project>
