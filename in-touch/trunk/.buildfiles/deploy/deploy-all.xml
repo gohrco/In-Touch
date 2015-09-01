@@ -21,7 +21,9 @@
 		<!-- Add version to our JIRA site -->
 		<jira_update />
 		
-			
+		<!-- Tag our Project Files -->
+		<project_tag />
+		
 			<echo message=" " />
 			<echo message="Begin Deploying WHMCS Addon Module" />
 			<echo message="-----------------------------------------------------" />

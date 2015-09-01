@@ -49,9 +49,6 @@
 		<!-- Deploy our files after building and packaging -->
 		<antcall target="deploy_all" />
 		
-		<!-- Tag our source in the repo -->
-		<antcall target="intouch_tag" />
-		
 			<echo message="=====================================================" />
 			<echo message="Completed Deployment of Project" />
 			<echo message="=====================================================" />
