@@ -9,11 +9,11 @@
 		<sequential>
 			
 			<exec executable="svn">
-				<arg line="add @{repo}@{folder}" />
+				<arg line="add &quot;@{repo}@{folder}&quot;" />
 			</exec>
 			
 			<exec executable="svn">
-				<arg line="ci @{repo} -m '@{message}'" />
+				<arg line="ci &quot;@{repo}&quot; -m '@{message}'" />
 			</exec>
 			
 		</sequential>
