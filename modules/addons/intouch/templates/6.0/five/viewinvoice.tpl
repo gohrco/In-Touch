@@ -15,7 +15,7 @@
 		
 // We must have the Dunamis Framework so lets build the path
 global $smarty;
-$path			=	dirname( realpath( $smarty->template_dir ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';"
+$path			=	dirname( realpath( $smarty->template_dir ) ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';
 $logo			= false;
 $legalfooter	= null;
 
