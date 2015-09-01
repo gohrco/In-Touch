@@ -7,6 +7,7 @@
 	<import file="ioncube_dir.xml" />
 	<import file="jira_update.xml" />
 	<import file="licensing.xml" />
+	<import file="project_tag.xml" />
 	<import file="repl_dir.xml" />
 	<import file="repl_file.xml" />
 	<import file="svn_tag.xml" />
