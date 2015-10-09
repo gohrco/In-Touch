@@ -2,8 +2,8 @@
 
 	<macrodef name="project_tag">
 		
-		<attribute name="message" value="${project.NAME} version ${project.VERSION} tagged" />
-		<attribute name="url" value="${project.SVNREPO}" />
+		<attribute name="message" default="${project.NAME} version ${project.VERSION} tagged" />
+		<attribute name="url" default="${project.SVNREPO}" />
 		
 		<sequential>
 			
