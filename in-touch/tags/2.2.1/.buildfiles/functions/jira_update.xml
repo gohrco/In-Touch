@@ -1,0 +1,19 @@
+<project>
+
+	<macrodef name="jira_update">
+		<!-- File Structure -->
+		<attribute name="username" default="${jira.USERNAME}" />
+		<attribute name="password" default="${jira.PASSWORD}" />
+		<attribute name="versiondata" default="{\&quot;description\&quot;:\&quot;\&quot;,\&quot;name\&quot;:\&quot;${project.VERSION}\&quot;,\&quot;archived\&quot;:false,\&quot;released\&quot;:true,\&quot;releaseDate\&quot;:\&quot;${RELDATE}\&quot;,\&quot;project\&quot;:\&quot;${jira.PROJECT}\&quot;,\&quot;projectId\&quot;:${jira.PROJECTID}}" />
+		
+		<sequential>
+			
+			<exec executable="curl">
+				<arg line="-u @{username}:@{password} -X POST --data '@{versiondata}' -H &quot;Content-Type: application/json&quot; ${jira.SITE}" />
+			</exec>
+			
+		</sequential>
+		
+	</macrodef>
+	
+</project>
