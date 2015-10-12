@@ -167,6 +167,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 			foreach ( $_REQUEST as $k => $v ) {
 				if ( strpos( $k, 'custom' ) === false ) continue;
 				$k	=	str_replace( 'custom', '', $k );
+				if (! $k ) continue;
 				$email->$k	=	$v;
 			}
 		}
