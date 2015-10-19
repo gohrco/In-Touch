@@ -94,8 +94,8 @@ function getGroupData( $groupid, $bygroupid = true, $decode = false )
  * @return		string
  * @since		2.2.00
  */
-if (! function_exists( 'get_version' ) ) {
-	function get_version()
+if (! function_exists( 'get_intouch_version' ) ) {
+	function get_intouch_version()
 	{
 		static $version = null;
 

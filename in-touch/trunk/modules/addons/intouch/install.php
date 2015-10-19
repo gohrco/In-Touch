@@ -169,7 +169,7 @@ class IntouchInstallDunModule extends WhmcsDunModule
 		// Template time
 		$this->sourcepath		=	dirname( __FILE__ ) . DIRECTORY_SEPARATOR
 								.	'templates' . DIRECTORY_SEPARATOR
-								.	get_version() . DIRECTORY_SEPARATOR;
+								.	get_intouch_version() . DIRECTORY_SEPARATOR;
 		$this->destinationpath	=	DUN_ENV_PATH
 								.	'templates'	. DIRECTORY_SEPARATOR;
 		
