@@ -4,6 +4,33 @@ include_once( 'client.php' );
 
 class IntouchInvoicesDunModule extends IntouchClientDunModule
 {
+	/**
+	 * Method for customizing an invoice
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		void
+	 * @since		2.2.2
+	 */
+	public function customizeInvoice()
+	{
+		global $smarty;
+		$logo			= false;
+		$legalfooter	= null;
+		
+		if (! $this->shouldCustomize() ) return;
+		
+		// Grab the global Smarty object
+		$sm		= $GLOBALS['smarty'];
+			
+		// Assign the custom logo and the custom payto variables to the template
+		$sm->assign( 'logo', $this->getLogoUrl() );
+		
+		if ( $addr	=	$this->getCustomAddress() )	$sm->assign( 'payto', implode( "<br/>", $addr ) );
+		if ( $legal	=	$this->getLegalFooter() )	$sm->assign( 'legal', htmlspecialchars_decode( $legal) );
+		
+	}
+	
 	
 	/**
 	 * Method for retrieving the address from system
