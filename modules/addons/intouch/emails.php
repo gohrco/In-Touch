@@ -304,7 +304,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		
 		$params	=	json_decode( $group->params, false );
 		
-		if (! empty( $params->emailcss ) ) $params->emailcss = '<style>' . $params->emailcss . '</style>';
+		if (! empty( $params->emailcss ) ) $params->emailcss = '<style>' . htmlspecialchars_decode( html_entity_decode( $params->emailcss ), ENT_QUOTES ) . '</style>';
 		
 		$vars['intouchstyle']		=	$params->emailcss;
 		$vars['intouchheader']		=	html_entity_decode( html_entity_decode( $params->emailheader ) );
