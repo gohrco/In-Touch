@@ -68,6 +68,10 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 			foreach ( $paramnames as $name ) {
 				$params[$name]	= $input->getVar( $name, null, 'post', 'html' );
 				
+				if ( $name == 'emailcss' ) {
+					$params[$name] = htmlentities( $params[$name] );
+				}
+				
 				if ( in_array( $name, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal', 'invoicelegalfooter', 'quotelegalfooter' ) ) ) {
 					$params[$name]	= htmlentities( $params[$name] );
 				}
@@ -148,6 +152,10 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 						if ( in_array( $k, array( 'emailheader', 'emailfooter', 'emailsig', 'emaillegal', 'invoicelegalfooter', 'quotelegalfooter' ) ) ) {
 							$group[$k]	= html_entity_decode( html_entity_decode( $v ) );
 							continue;
+						}
+						
+						if ( $k == 'emailcss' ) {
+							$v = htmlspecialchars_decode( html_entity_decode( $v ), ENT_QUOTES );
 						}
 						
 						if ( in_array( $k, array( 'invoiceadd', 'quoteadd' ) ) ) {
