@@ -61,6 +61,8 @@ $lang['admin.title.configure.default']		= '<small>Configure</small>';
 $lang['admin.title.configure.save']			= '<small>Configure :: Save Settings</small>';
 // 2.0.8
 $lang['admin.title.updates.default']		=	'<small>Update Manager</small>';
+// 2.2.2
+$lang['admin.title.syscheck.default']		=	'<small>System Check</small>';
 
 // Navigation Bar
 $lang['admin.navbar.default']	= 'Dashboard';
@@ -69,6 +71,8 @@ $lang['admin.navbar.configure']	= 'Configure';
 $lang['admin.navbar.license']	= 'License';
 // 2.0.8
 $lang['admin.navbar.updates']	= 'Updates';
+// 2.2.2
+$lang['admin.navbar.syscheck']	=	'System Check';
 
 
 //	------------------------------------------------------------------------
@@ -285,3 +289,69 @@ $lang['updates.download.subtitle']	=	"Installing version %s...";
 
 $lang['updates.complete.title']		=	"Upgrade Complete!";
 $lang['updates.complete.subtitle']	=	"Version %s installed";
+
+
+
+//	========================================================================
+//	System Check Page
+//		WHMCS > Addons > In Touch > System Check
+//	========================================================================
+//		as of 2.2.2
+//	------------------------------------------------------------------------
+
+$lang['install.file.error.read']	=	'There was a problem reading the %s file';
+$lang['install.file.error.version']	=	'Unable to determine the version of the %s file';
+$lang['install.file.error.newer']	=	'%s is newer than %s';
+$lang['install.file.jwhmcs']		=	'the In Touch template file';
+$lang['install.file.template']		=	'the template file currently being used';
+
+$lang['syscheck.general.supported.yes']	=	'Supported';
+$lang['syscheck.general.supported.no']	=	'Not Supported';
+$lang['syscheck.general.yesno.yes']		=	'Yes';
+$lang['syscheck.general.yesno.no']		=	'No';
+$lang['syscheck.general.attention']		=	'Attention: ';
+$lang['syscheck.general.fixit']			=	'Correct';
+
+
+$lang['syscheck.tblhdr.whmcs']		=	'<h4>WHMCS System Check</h4>';
+$lang['syscheck.tbldata.whmcs.version']		=	'%s Version';
+$lang['syscheck.tbldata.whmcs.sslenabled']	=	'%s SSL Enabled';
+$lang['syscheck.tbldata.whmcs.template']	=	'%s System Template';
+$lang['syscheck.tbldata.whmcs.urlproper']	=	'%s URLs Proper';
+
+$lang['syscheck.version.help']		=	' The version of In Touch you are running does not explicitly support the version of WHMCS you are running.  If you have recently upgraded WHMCS, you will need to check for an update from Go Higher for the In Touch to ensure any changes in the system API will work with In Touch.';
+$lang['syscheck.sslenabled.help']	=	' In Touch has determined that you are not using SSL on your system.  If you are in fact using SSL but haven\'t changed your System URLs in the WHMCS settings to allow for the system to operate in SSL mode, then this will cause problems when wrapping your Joomla site around WHMCS.  If you don\'t have an SSL certificate';
+$lang['syscheck.template.help']		=	' The template you have selected in the WHMCS settings is not a supported template.  You will need to change your settings in the WHMCS General Settings area to one of the standard template types from WHMCS - Classic, Default or Portal.';
+$lang['syscheck.urlmix.help']		=	' In Touch has determined that the System URL and the System SSL URL set in your WHMCS General Settings are not using the same host name.  This can pose problems for the user and log in integration tasks, as WHMCS is very specific about which hostname a user is logged in on (for example, a user logged in at www.yourdomain.com will not be seen as logged in on yourdomain.com, only www.yourdomain.com).';
+
+// v2.5.4
+$lang['syscheck.template.info']		=	'The template you have selected in the WHMCS settings is setup to be supported by In Touch, however you will need to keep in mind that updates to WHMCS will require additional steps to be taken to ensure your templates remain current.';
+
+
+$lang['syscheck.tblhdr.env']			=	'<h4>Environment Check</h4>';
+$lang['syscheck.tbldata.env.curl']			=	'%s Curl Support';
+$lang['syscheck.tbldata.env.iconv']			=	'%s iconv Found';
+$lang['syscheck.tbldata.env.mbdetect']		=	'%s Multibyte';
+$lang['syscheck.tbldata.env.phpvers']		=	'%s PHP Version';
+
+$lang['syscheck.curl.help']			=	' The Client URL Library (curl) could not be found in your environment.  You must compile your PHP with curl in order for In Touch to operate properly.';
+$lang['syscheck.iconv.help']		=	' In Touch was unable to locate the iconv function which is used to transliterate a Joomla site to match your WHMCS character encoding.  This may not be a big deal if you are using ISO-8895-1 or UTF-8 in WHMCS, but for any other character encoding you will want to build php with this capability.';
+$lang['syscheck.mbdetect.help']		=	' In Touch was unable to locate the multibyte string functionality needed to transliterate a Joomla site to match your WHMCS character encoding.  This may not be a big deal if you are using ISO-8895-1 or UTF-8 in WHMCS, but for any other character encoding you will want to build php with this capability.';
+$lang['syscheck.phpvers.help']		=	' You must use PHP version 5.2 or higher!';
+
+
+$lang['syscheck.tblhdr.api']		=	'<h4>API Check</h4>';
+$lang['syscheck.tbldata.api.apiurl']	=	'%s API URL';
+$lang['syscheck.tbldata.api.apifound']	=	'%s URL Found';
+$lang['syscheck.tbldata.api.token']		=	'%s Token Set';
+$lang['syscheck.tbldata.api.tokenauth']	=	'%s Token Valid';
+
+$lang['syscheck.apiurl.help']		=	' You haven\'t set a value for the Integrator URL yet in the settings for In Touch.  Please click on Settings above to do so now.';
+$lang['syscheck.apifound.help']		=	' The API attempted to verify the URL you entered in your settings and received this message back: %s';
+$lang['syscheck.token.help']		=	' You haven\'t set a Token yet in the settings for In Touch.  Please click on Settings above to do so now.';
+$lang['syscheck.tokenauth.help']	=	' The API attempted to verify the token and authorize access to Joomla but received this message back from Joomla: %s';
+
+$lang['syscheck.tblhdr.files']		=	'<h4>File Check</h4>';
+
+// v2.5.11
+$lang['syscheck.general.fixall']	=	'Correct All';

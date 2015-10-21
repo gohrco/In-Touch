@@ -225,7 +225,7 @@ class IntouchAdminDunModule extends WhmcsDunModule
 		$uri->setVar( 'module', 'intouch' );
 		
 		$data		=	'<ul class="nav nav-pills">';
-		$actions	=	array( 'default', 'groups', 'configure', 'updates', 'license' );
+		$actions	=	array( 'default', 'syscheck', 'groups', 'configure', 'updates', 'license' );
 		
 		foreach( $actions as $item ) {
 			if ( $item == $this->action && in_array( $this->task, array( 'default', 'save' ) ) ) {
