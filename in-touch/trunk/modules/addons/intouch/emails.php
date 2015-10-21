@@ -500,6 +500,8 @@ LANG;
 		$groupid	=	$this->_getGroupId( $email->type, $vars['relid'] );
 		$group		=	getGroupData( $groupid, true, true );
 		
+		if (! $group->emailenabled ) return false;
+		
 		if ( $group->emailname ) {
 			$CONFIG['CompanyName']	=	$group->emailname;
 		}
