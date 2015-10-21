@@ -196,6 +196,8 @@ $lang['admin.form.group.params.optn.emails']	= 'Emails';
 $lang['admin.form.group.params.optn.invoices']	= 'Invoices';
 $lang['admin.form.group.params.optn.quotes']	= 'Quotes';
 // Emails
+$lang['admin.form.group.label.emailenabled']	=	'Customize Emails';
+$lang['admin.form.group.desc.emailenabled']		=	'Enabling this setting will allow you to customize emails sent for clients belonging to this group.';
 $lang['admin.form.group.label.emailcss']	= 'Email CSS Styles';
 $lang['admin.form.group.desc.emailcss']		= 'Enter some styles to apply to your email content.  This field does not contain HTML but should contain CSS style declarations that will be declared for emails sent out.  <strong>Do not wrap with style tags!</strong> - they will be added for you if this field is not left empty.';
 $lang['admin.form.group.label.emailheader']	= 'Email Header';
