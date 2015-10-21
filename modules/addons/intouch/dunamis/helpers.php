@@ -124,3 +124,20 @@ if (! function_exists( 'get_intouch_version' ) ) {
 		return $version;
 	}
 }
+
+
+/**
+ * Simple function to determine if we are supporting the installed WHMCS version
+ * @version		@fileVers@
+ *
+ * @return		boolean
+ * @since		3.1.00
+ */
+if (! function_exists( 'is_supported_byintouch' ) ) {
+	function is_supported_byintouch()
+	{
+		$curversion	=	substr( DUN_ENV_VERSION, 0, 3 );
+
+		return $curversion == get_intouch_version();
+	}
+}

@@ -89,6 +89,22 @@ class IntouchAjaxDunModule extends IntouchAdminDunModule
 		
 		switch ( $this->task ) {
 			// --------------------------------
+			// Fix a certain template file
+			case 'fixfile' :
+			
+				$install	=	dunmodule( 'intouch.install' );
+				$input		=	dunloader( 'input', true );
+			
+				$file	=	$input->getVar( 'file' );
+				$result	=	$install->fixFile( $file );
+			
+				$data	=	array(
+						'state'	=> ( $result ? 1 : 0 ),
+						'span'	=> t( 'intouch.syscheck.general.yesno.' . ( $result ? 'yes' : 'no' ) ),
+				);
+			
+				break;
+			// --------------------------------
 			// Download update
 			case 'updateinstall' :
 				$updates	=	dunloader( 'updates', 'intouch' );

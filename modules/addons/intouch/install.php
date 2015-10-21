@@ -80,6 +80,93 @@ class IntouchInstallDunModule extends WhmcsDunModule
 	
 	
 	/**
+	 * Method for cycling through files to check for updated / modified files
+	 * @access		public
+	 * @version		@fileVers@ ( $id$ )
+	 *
+	 * @return		array of objects
+	 * @since		2.2.2
+	 */
+	public function checkFiles( $tpl = null )
+	{
+		$files	=	$this->_getTemplatefiles( $tpl );
+		$css	=	$this->_getTemplatefiles( $tpl, 'css' );
+		$js		=	$this->_getTemplatefiles( $tpl, 'js' );
+		$eot	=	$this->_getTemplatefiles( $tpl, 'eot' );
+		$svg	=	$this->_getTemplatefiles( $tpl, 'svg' );
+		$ttf	=	$this->_getTemplatefiles( $tpl, 'ttf' );
+		$woff	=	$this->_getTemplatefiles( $tpl, 'woff' );
+		$files	=	array_merge( $files, $css, $js, $eot, $svg, $ttf, $woff );
+		sort( $files );
+	
+		foreach ( $files as $file ) {
+				
+			$tmp	=	(object) array(
+					'current'	=>	false,
+					'error'		=>	false,
+					'code'		=>	0,
+			);
+				
+			if ( $this->_isFilesizesame( $file ) ) {
+				$tmp->current = true;
+				$this->files[$file]	=	$tmp;
+				continue;
+			}
+				
+			// Read files
+			$source	=	file_exists( $this->sourcepath . $file )		? @file( $this->sourcepath . $file ) : false;
+			$dest	=	file_exists( $this->destinationpath . $file )	? @file( $this->destinationpath . $file ) : false;
+				
+			// Catch errors reading
+			if (! $source || ! $dest ) {
+				$tmp->code			=	(! $source ? 1 : 4 );
+				$tmp->error			=	t( 'intouch.install.file.error.read', ( ! $source ? 'source' : 'existing template' ) );
+				$this->files[$file]	=	$tmp;
+				continue;
+			}
+				
+			// Find versions of files
+			$sv	=
+			$dv	=	false;
+				
+			foreach( array( 'sv' => 'source', 'dv' => 'dest' ) as $holder => $item ) {
+				foreach ( $$item as $s ) {
+					if ( preg_match( '/@version\s+([0-9\.]+)/im', $s, $matches, PREG_OFFSET_CAPTURE ) ) {
+						$$holder	=	$matches[1][0];
+						break;
+					}
+				}
+			}
+				
+			// Ensure we found versions
+			if (! $dv || ! $sv ) {
+				$tmp->code			=	2;
+				$tmp->error			=	t( 'intouch.install.file.error.version', ( ! $sv ? 'source' : 'existing template' ) );
+				$this->files[$file]	=	$tmp;
+				continue;
+			}
+				
+			// Do our comparisons
+			if ( version_compare( $dv, $sv, 'lt' ) ) {
+				$tmp->code			=	4;
+				$tmp->error			=	t( 'intouch.install.file.error.newer', ucfirst( t( 'intouch.install.file.intouch' ) ), t( 'intouch.install.file.template' ) );
+			}
+			else if ( version_compare( $dv, $sv, 'gt' ) ) {
+				$tmp->code			=	8;
+				$tmp->error			=	t( 'intouch.install.file.error.newer', ucfirst( t( 'intouch.install.file.template' ) ), t( 'intouch.install.file.intouch' ) );
+			}
+			else {
+				$tmp->current		=	true;
+			}
+				
+			$this->files[$file]	=	$tmp;
+		}
+	
+		return $this->files;
+	}
+	
+	
+	/**
 	 * Performs module deactivation
 	 * @access		public
 	 * @version		@fileVers@
