@@ -24,9 +24,9 @@ class IntouchInvoicesDunModule extends IntouchClientDunModule
 		$sm		= $GLOBALS['smarty'];
 			
 		// Assign the custom logo and the custom payto variables to the template
-		$sm->assign( 'logo', $this->getLogoUrl() );
+		$sm->assign( 'mylogo', $this->getLogoUrl() );
 		
-		if ( $addr	=	$this->getCustomAddress() )	$sm->assign( 'payto', implode( "<br/>", $addr ) );
+		if ( $addr	=	$this->getCustomAddress() )	$sm->assign( 'mypayto', implode( "<br/>", $addr ) );
 		if ( $legal	=	$this->getLegalFooter() )	$sm->assign( 'legal', htmlspecialchars_decode( $legal) );
 		
 	}

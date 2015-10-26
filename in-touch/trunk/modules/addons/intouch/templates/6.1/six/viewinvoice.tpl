@@ -42,8 +42,8 @@
             <div class="row">
                 <div class="col-sm-7">
 
-                    {if $logo}
-                        <p><img src="{$logo}" title="{$companyname}" /></p>
+                    {if $mylogo}
+                        <p><img src="{$mylogo}" title="{$companyname}" /></p>
                     {else}
                         <h2>{$companyname}</h2>
                     {/if}
@@ -94,7 +94,7 @@
                 <div class="col-sm-6 pull-sm-right text-right-sm">
                     <strong>{$LANG.invoicespayto}:</strong>
                     <address class="small-text">
-                        {$payto}
+                        {if $mypayto}{$mypayto}{else}{$payto}{/if}
                     </address>
                 </div>
                 <div class="col-sm-6">

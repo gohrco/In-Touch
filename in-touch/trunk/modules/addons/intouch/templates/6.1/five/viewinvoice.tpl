@@ -34,7 +34,7 @@
 
 <table class="header"><tr><td width="50%" nowrap>
 
-{if $logo}<p><img src="{$logo}" title="{$companyname}" /></p>{else}<h1>{$companyname}</h1>{/if}
+{if $mylogo}<p><img src="{$mylogo}" title="{$companyname}" /></p>{else}<h1>{$companyname}</h1>{/if}
 
 </td><td width="50%" align="center">
 
@@ -104,7 +104,7 @@
 <div class="addressbox">
 
 <strong>{$LANG.invoicespayto}</strong><br />
-{$payto}
+{if $mypayto}{$mypayto}{else}{$payto}{/if}
 
 </div>
 
