@@ -15,7 +15,7 @@
 
 // We must have the Dunamis Framework so lets build the path
 $path			=	( isset( $this->template_dir ) ? rtrim( dirname( $this->template_dir ), DIRECTORY_SEPARATOR ) : dirname( dirname( __DIR__ ) ) )
-				.	DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';";
+				.	DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'dunamis.php';
 $logo			= false;
 $legalfooter	= null;
 
