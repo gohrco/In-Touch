@@ -1,0 +1,17 @@
+<project>
+
+	<macrodef name="svn_update">
+		<!-- File Structure -->
+		<attribute name="repo" default="${local.LOCATION_PACKAGES}" />
+		
+		<sequential>
+			
+			<exec executable="svn">
+				<arg line="up &quot;@{repo}&quot;" />
+			</exec>
+			
+		</sequential>
+		
+	</macrodef>
+	
+</project>

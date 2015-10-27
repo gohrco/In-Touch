@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Module:  Deploy All" basedir=".">
+	
+	<import file="../includes.xml" />
+	
+	<target name="deploy_all" depends="properties">
+			
+			<echo message=" " />
+			<echo message="Begin Deploying WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			
+		<!-- Commit our archives for deployment to customers -->
+		<svn_update />
+		<svn_versioncommit />
+		<svn_update />
+		
+		<!-- Tag our version in our repo -->
+		<svn_tag />
+		
+		<!-- Add version to our JIRA site -->
+		<jira_update />
+		
+		<!-- Tag our Project Files -->
+		<project_tag />
+		
+			<echo message=" " />
+			<echo message="Begin Deploying WHMCS Addon Module" />
+			<echo message="-----------------------------------------------------" />
+			<echo message=" " />
+			<echo message=" " />
+	</target> 
+	
+
+	<!-- ====================================================== -->
+	<!-- THE FOLLOWING ARE FOR OUR LOCAL REPO TO TAG IN THE SVN -->
+	<!-- ====================================================== -->
+	<target name="intouch_tag" depends="intouch_svntag_properties">
+			<echo message="----------------------------------------------------" />
+			<echo message="|                      Begin Tagging In Touch Source" />
+		
+		<antcall target="intouch_repotag_update" />
+		<antcall target="intouch_repotag_tag" />
+		
+			<echo message="|                  Completed Tagging In Touch Source" />
+			<echo message="----------------------------------------------------" />
+	</target>
+	
+	<target name="intouch_repotag_update">
+		<exec executable="svn">
+			<arg line="up &quot;${src.dev}&quot;" />
+		</exec>
+	</target>
+	
+	<target name="intouch_repotag_tag">
+		<exec executable="svn">
+			<arg line="cp ${intouchsvn.url}trunk ${intouchsvn.url}tags/${project.VERSION} -m '${intouchsvn.message}'" />
+		</exec>
+	</target>
+	
+	<target name="intouch_svntag_properties">
+		<property name="intouchsvn.message" value="In Touch version ${project.VERSION} tagged" />
+		<property name="intouchsvn.url" value="${project.SVNREPO}" />
+	</target>
+	
+	
+</project> 
