@@ -10,8 +10,8 @@ UPDATE_SITE=https://www.gohigheris.com/updates/whmcsmodules/intouch
 SVNREPO=https://go-higher.svn.beanstalkapp.com/whmcs-modules/in-touch/
 #
 SERIES=2.2
-SHORT=223
-VERSION=2.2.3
+SHORT=224
+VERSION=2.2.4
 #
 MATURITY=stable
 ACCESS=Public
