@@ -33,9 +33,22 @@ if ( $vars['messagename'] == 'Client Signup Email' ) {
 }
 
 
+// WHMCS 6.0 Method:
+// =================
+if ( version_compare( DUN_ENV_VERSION, '6.0', 'ge' ) ) {
+	
+	$emails	=	dunmodule( 'intouch.emails' );
+	
+	if ( $emails->ismassmail( $vars ) ) {
+		$response = $emails->handlemassmail( $vars );
+	}
+	else {
+		$response = $emails->intercept( $vars );
+	}
+}
 // WHMCS 5.1 Method:
 // =================
-if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
+else if ( version_compare( DUN_ENV_VERSION, '5.1', 'ge' ) ) {
 	
 	// See if this is the looped call for our email template
 	if ( strpos( $vars['messagename'], 'Mass Mail Template' ) === false ) {
