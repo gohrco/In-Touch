@@ -33,6 +33,38 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	
 	
 	/**
+	 * Method to get custom fields for the group
+	 * @access		public
+	 * @version		@fileVers@
+	 * @param		array
+	 *
+	 * @return		array
+	 * @since		2.2.4
+	 */
+	public function customFields( $vars )
+	{
+		$db				=	dunloader( 'database', true );
+		$msgname		=	$vars['messagename'];
+	
+		if ( version_compare( DUN_ENV_VERSION, '6.0', 'ge' ) ) {
+			$email		=	new stdClass();
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( strpos( $k, 'custom' ) === false ) continue;
+				$k	=	str_replace( 'custom', '', $k );
+				if (! $k ) continue;
+				$email->$k	=	$v;
+			}
+		}
+		else {
+			$db->setQuery( "SELECT * FROM `tblemailtemplates` WHERE `name` = " . $db->Quote( $msgname ) );
+			$email	=	$db->loadObject();
+		}
+	
+		return $this->_getCustomvars( $email, $vars['relid'], false );
+	}
+	
+	
+	/**
 	 * Method for determining if we are dealing with a contact
 	 * @desc		WHMCS wipes the reset key prior to getting to us so we must test it in the initialization of the hooks
 	 * 				to see if the key belongs to a contact or client
@@ -48,6 +80,66 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		
 		$iscontact = false;
 		extract( $this->_findClient( $key, false ) );
+	}
+	
+	
+	/**
+	 * Method to handle mass mail template
+	 * @access		public
+	 * @version		@fileVers@
+	 * @param		array
+	 *
+	 * @return		array
+	 * @since		2.2.4
+	 */
+	public function handlemassmail( $vars )
+	{
+		$db			=	dunloader( 'database', true );
+		$email		=	new stdClass();
+		foreach ( $_REQUEST as $k => $v ) {
+			if ( strpos( $k, 'custom' ) === false ) continue;
+			$k	=	str_replace( 'custom', '', $k );
+			if (! $k ) continue;
+			$email->$k	=	$v;
+		}
+	
+		if (! isset( $email->type ) && get_filename() == 'sendmessage' ) {
+			if (! isset( $_REQUEST['fromintouch'] ) && isset( $GLOBALS['massmailquery'] ) ) {
+				$db->setQuery( $GLOBALS['massmailquery'] );
+				$results	= $db->loadObjectList();
+			}
+			else {
+				$results	=	array( new stdClass() );
+				$results[0]->id	=	$vars['relid'];
+			}
+				
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( in_array( $k, array( 'token', 'action', 'savename' ) ) ) continue;
+				$email->$k	=	$v;
+			}
+				
+			$email->fromintouch = true;
+			$apiuser	=	$this->getApiuser();
+				
+			foreach( $results as $result ) {
+				$sent = $this->_sendEmail( $email, array( 'relid' => $result->id ) );
+	
+				if (! $sent ) {
+					$emailvars	=	(array) $email;
+					$emailvars['id']			=	$result->id;
+					$emailvars['customtype']	=	$email->type;
+					$emailvars['customsubject']	=	$email->subject;
+					$emailvars['custommessage']	=	$email->message;
+						
+					localAPI( 'sendemail', $emailvars, $apiuser );
+				}
+			}
+				
+			return array( 'abortsend' => true );
+		}
+		else {
+			return $this->_getCustomvars( $email, $vars['relid'], false );
+		}
 	}
 	
 	
@@ -75,7 +167,7 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	 */
 	public function intercept( $vars = array() )
 	{
-		$db				=	dunloader( 'database', true );
+	$db				=	dunloader( 'database', true );
 		$config			=	dunloader( 'config', 'intouch' );
 		
 		// Check the global enable first - if disabled stop now
@@ -100,6 +192,10 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		}
 		// If we still find Quote in the name, we have customized the email template itself
 		else if ( strpos( $email->name, 'Quote' ) !== false ) {
+			$groupid	=	$this->_getGroupId( $email->type, $vars['relid'] );
+			$group		=	getGroupData( $groupid, true, true );
+			if (! $group->emailenabled ) return array();
+			
 			$email->type = 'quote';
 			$merge_fields	=	$this->_getCustomvars( $email, $vars['relid'], false );
 			return $merge_fields;
@@ -148,6 +244,22 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 	
 	
 	/**
+	 * Method to check if this is a mass mail template or not
+	 * @access		public
+	 * @version		@fileVers@
+	 * @param		array
+	 * 
+	 * @return		boolean
+	 * @since		2.2.4
+	 */
+	public function ismassmail( $vars )
+	{
+		if (! isset( $vars['messagename'] ) ) return false;
+		return $vars['messagename'] == 'Mass Mail Template';
+	}
+	
+	
+	/**
 	 * Method to verify and customize the mass mail template being used
 	 * @access		public
 	 * @version		@fileVers@
@@ -174,6 +286,37 @@ class IntouchEmailsDunModule extends WhmcsDunModule
 		else {
 			$db->setQuery( "SELECT * FROM `tblemailtemplates` WHERE `name` = " . $db->Quote( $msgname ) );
 			$email	=	$db->loadObject();
+		}
+		
+		if (! isset( $email->type ) && get_filename() == 'sendmessage' ) {
+			if (! isset( $_REQUEST['fromintouch'] ) && isset( $GLOBALS['massmailquery'] ) ) {
+				$db->setQuery( $GLOBALS['massmailquery'] );
+				$results	= $db->loadObjectList();
+			}
+			else {
+				$results	=	array( new stdClass() );
+				$results[0]->id	=	$vars['relid'];
+			}
+			
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( in_array( $k, array( 'token', 'action', 'savename' ) ) ) continue;
+				$email->$k	=	$v;
+			}
+			
+			$email->fromintouch = true;
+			$apiuser	=	$this->getApiuser();
+			
+			foreach( $results as $result ) {
+				$sent = $this->_sendEmail( $email, array( 'relid' => $result->id ) );
+				if (! $sent ) {
+					$emailvars			=	(array) $email;
+					$emailvars['id']	=	$result->id;
+					
+					localAPI( 'sendemail', $emailvars, $apiuser );
+				}
+			}
+			
+			return array( 'abortsend' => true );
 		}
 		
 		// Test message to see if this is our customization or a Mass Email through WHMCS tool
@@ -510,7 +653,7 @@ LANG;
 			$CONFIG['Email']	=	$group->emailfrom;
 		}
 		
-		$emailvars = array();
+		$emailvars = array( 'fromintouch' => true );
 		foreach ( $email as $item => $value ) {
 			// No id or name...
 			if ( in_array( $item, array( 'id', 'name', 'created_at', 'updated_at' ) ) ) continue;
