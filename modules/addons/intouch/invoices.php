@@ -167,7 +167,7 @@ class IntouchInvoicesDunModule extends IntouchClientDunModule
 		// Somehow we don't have what we need...
 		if (! $params ) return false;
 		
-		$path	=	ROOTDIR . $params->invoicelogo;
+		$path	=	rtrim( ROOTDIR, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $params->invoicelogo;
 		if ( file_exists( $path ) ) return $path;
 		else return false;
 	}
