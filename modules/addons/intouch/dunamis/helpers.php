@@ -127,6 +127,45 @@ if (! function_exists( 'get_intouch_version' ) ) {
 
 
 /**
+ * Function to get the short version number
+ * @version		@fileVers@
+ *
+ * @return		string
+ * @since		2.2.4
+ */
+if (! function_exists( 'get_version' ) ) {
+	function get_version()
+	{
+		static $version = null;
+
+		if ( $version == null ) {
+			$curversion	=	substr( DUN_ENV_VERSION, 0, 3 );
+
+			$path	=	dirname( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR
+			.	'templates' . DIRECTORY_SEPARATOR;
+
+			if ( is_dir( $path . $curversion ) ) {
+				$version	=	$curversion;
+			}
+			else {
+				$dh		=	opendir( $path );
+				$dirs	=	array();
+				while ( false !== ( $file = readdir( $dh ) ) ) {
+					if ( in_array( $file, array( '.', '..' ) ) ) continue;
+					if (! is_dir( $path . DIRECTORY_SEPARATOR . $file ) ) continue;
+					$dirs[]	=	$file;
+				}
+				rsort( $dirs );
+				$version	=	array_shift( $dirs );
+			}
+		}
+
+		return $version;
+	}
+}
+
+
+/**
  * Simple function to determine if we are supporting the installed WHMCS version
  * @version		@fileVers@
  *

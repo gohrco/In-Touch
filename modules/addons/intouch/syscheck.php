@@ -7,7 +7,7 @@
  * @license    @buildLicense@
  * @version    @fileVers@ ( $Id$ )
  * @author     @buildAuthor@
- * @since      3.1.00
+ * @since      2.2.4
  *
  * @desc       This file handles system check for the product
  *
@@ -19,7 +19,7 @@
  * @version		@fileVers@
  *
  * @author		Steven
- * @since		3.1.00
+ * @since		2.2.4
  */
 class IntouchSyscheckDunModule extends IntouchAdminDunModule
 {
@@ -27,7 +27,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * Provide means to check for file integrity
 	 * @access		protected
 	 * @var			string
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	protected $checkstring	=	"@checkString@";
 	
@@ -37,7 +37,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @access		public
 	 * @version		@fileVers@
 	 *
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 * @see			IntegratorAdminDunModule :: initialise()
 	 */
 	public function initialise()
@@ -51,7 +51,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @access		public
 	 * @version		@fileVers@
 	 * 
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	public function execute() { }
 	
@@ -62,7 +62,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @version		@fileVers@
 	 * 
 	 * @return		string containing formatted output
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	public function render( $data = null )
 	{
@@ -70,6 +70,16 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 		$doc	=	dunloader( 'document', true );
 		$doc->addScript( get_baseurl( 'intouch' ) . 'assets/js/syscheck.js' );
 		$doc->addScriptDeclaration( 'var ajaxurl = "' . get_baseurl( 'intouch' ) . '";' );
+		
+		$views	=	dunloader( 'views', 'intouch' );
+		$views->setData( $this->getModel() );
+		
+		return parent :: render( $views->render( 'syscheck' ) );
+		
+		
+		
+		
+		
 		
 		$model	=	$this->getModel();
 		$data	=	array();
@@ -122,10 +132,75 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @version		@fileVers@ ( $id$ )
 	 *
 	 * @return		object
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	public function getModel()
 	{
+		
+		// Gather the WHMCS info first
+		$wconfig	=	dunloader( 'config', true );
+		$tmpl		=	$wconfig->get( 'Template' );
+		$sysurl		=	$wconfig->get( 'SystemURL' );
+		$syssslurl	=	$wconfig->get( 'SystemSSLURL' );
+		
+		$suri		=	DunUri :: getInstance( $sysurl, true );
+		$ssuri		=	DunUri :: getInstance( $syssslurl, true );
+		
+		$usesssl	=	( $suri->isSSL() || ( ! empty( $syssslurl ) && is_object( $ssuri ) && $ssuri->isSSL() ) ) ? true : false;
+		if (! $usesssl && empty( $syssslurl ) ) $usesssl = null;
+		$urlmixed	=	(! $ssuri->getHost() || $suri->getHost() == $ssuri->getHost() ) ? true : false;
+		
+		if ( in_array( $tmpl, array( 'portal', 'default','classic' ) ) ) {
+			$tsup	=	1;
+		}
+		else {
+			$path	=	get_path( 'templates', 'intouch' ) . get_version() . DIRECTORY_SEPARATOR;
+				
+			if ( is_dir( $path . $tmpl ) ) {
+				$tsup	=	2;
+			}
+			else {
+				$tsup	=	0;
+			}
+		}
+		
+		// File Checking Information variables
+		$config		=	dunloader( 'config', 'intouch' );
+		$install	=	dunmodule( 'intouch.install' );
+		$ourfiles	=	(object) $install->checkFiles();
+		
+		// Build our objects next
+		// ----------------------
+		// WHMCS Info first
+		$whmcs				=	new stdClass;
+		$whmcs->version		=	new IntouchDispClass( 'version', is_supported_byintouch(), DUN_ENV_VERSION );
+		$whmcs->template	=	new IntouchDispClass( 'template', $tsup, $tmpl );
+		$whmcs->urlproper	=	new IntouchDispClass( 'urlproper', $urlmixed );
+		
+		// Gather the Environmental variables
+		$env				=	new stdClass;
+		$env->curl			=	new IntouchDispClass( 'curl', function_exists( 'curl_exec' ) );
+		$env->iconv			=	new IntouchDispClass( 'iconv', function_exists( 'iconv' ) );
+		$env->mbdetect		=	new IntouchDispClass( 'mbdetect', function_exists( 'mb_detect_encoding' ) );
+		$env->phpvers		=	new IntouchDispClass( 'phpvers', version_compare( phpversion(), '5.2', 'ge' ), phpversion() );
+		
+		// Files variables
+		$files				=	new stdClass;
+		
+		foreach ( $ourfiles as $filename => $fileprops ) {
+			$files->$filename	=	new IntouchDispClass( $filename, $fileprops->current, $fileprops->error, true, $fileprops->code );
+		}
+		
+		return (object) array(
+				'files'	=>	$files,
+				'whmcs'	=>	$whmcs,
+				'env'	=>	$env,
+		);
+		
+		
+		
+		
+		
 		// Gather the WHMCS info first
 		$wconfig	=	dunloader( 'config', true );
 		$tmpl		=	$wconfig->get( 'Template' );
@@ -181,7 +256,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @param		object		- $items: the set of items being sent for this group
 	 *
 	 * @return		string
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	private function _getHelp( $item, $items, $row = 'whmcs' )
 	{
@@ -283,7 +358,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @param		string		- $row: indicates which subset we are on
 	 *
 	 * @return		string
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	private function _getLabel( $item, $items, $row = 'whmcs' )
 	{
@@ -354,7 +429,7 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 	 * @param		object		- $items: the set of items being sent for this group
 	 *
 	 * @return		string
-	 * @since		3.1.00
+	 * @since		2.2.4
 	 */
 	private function _getValue( $item, $items, $row = 'whmcs' )
 	{
@@ -411,5 +486,373 @@ class IntouchSyscheckDunModule extends IntouchAdminDunModule
 		endswitch;
 		
 		return $data;
+	}
+}
+
+
+/**
+ * Display class for our system check objects
+ * @version		@fileVers@
+ *
+ * @author		Steven
+ * @since		2.6.07
+ */
+class IntouchDispClass extends stdClass
+{
+	public $help	=	array();
+	public $id		=	null;
+	public $title	=	null;
+	public $value	=	array();
+
+	private $_file		=	false;
+	private $_filecode	=	0;
+	private $_name		=	null;
+	private $_text		=	false;
+	private $_value		=	null;
+
+
+	/**
+	 * Constructor method
+	 * @access		public
+	 * @version		@fileVers@
+	 * @param		string		: contains the name of our object
+	 * @param		mixed		: contains the value of our object
+	 * @param		string		: contains the text we want displayed if any
+	 * @param		boolean		: indicates this is for a file
+	 * @param		integer		: the file code determined by our file checker
+	 *
+	 * @since		2.6.07
+	 */
+	public function __construct( $name = null, $value = null, $text = null, $file = false, $filecode = 0 )
+	{
+		$this->_file		=	$file;
+		$this->_filecode	=	$filecode;
+		$this->_name		=	$name;
+		$this->_value		=	$value;
+		$this->_text		=	$text;
+
+		$this->setTitle();
+		$this->setId();
+		$this->setValue();
+		$this->setHelp();
+	}
+
+
+	/**
+	 * Method to get the file code of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		integer
+	 * @since		2.6.07
+	 */
+	public function getFilecode()
+	{
+		return $this->_filecode;
+	}
+
+
+	/**
+	 * Method to get the help value of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		object
+	 * @since		2.6.07
+	 */
+	public function getHelp()
+	{
+		return $this->help;
+	}
+
+
+	/**
+	 * Method to get the id of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+
+	/**
+	 * Method to get the name of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+
+	/**
+	 * Method to get the title of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+
+	/**
+	 * Method to get the determined value of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		object
+	 * @since		2.6.07
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
+
+
+	/**
+	 * Method to get the raw value
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		mixed
+	 * @since		2.6.07
+	 */
+	public function getValueraw()
+	{
+		return $this->_value;
+	}
+
+
+	/**
+	 * Method to determine if this is a file object or not
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @return		boolean
+	 * @since		2.6.07
+	 */
+	public function isFile()
+	{
+		return $this->_file ? true : false;
+	}
+
+
+	/**
+	 * Method to set the help of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @since		2.6.07
+	 */
+	public function setHelp()
+	{
+		$this->help	=	(object) array(
+				'text'	=>	$this->_getHelp(),
+				'type'	=>	$this->_getHelptype(),
+		);
+	}
+
+
+	/**
+	 * Method to set the id of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @since		2.6.07
+	 */
+	public function setId()
+	{
+		$help	=	( $this->_file ? 'help' : 'id' );
+		$id		=	preg_replace( '#[\\\\/\.]*#', '', strtolower( $this->_name ) );
+
+		$this->id	=	$help . $id . rand( 100, 999 );
+	}
+
+
+	/**
+	 * Method to set the title of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @since		2.6.07
+	 */
+	public function setTitle()
+	{
+		switch ( $this->_name ) :
+		case 'sslenabled'	:
+		case 'template'		:
+		case 'templatesupported' :
+		case 'urlproper'	:
+		case 'version'		:	$title	=	t( 'intouch.syscheck.tbldata.whmcs.' . $this->_name );	break;
+		case 'curl'			:
+		case 'iconv'		:
+		case 'mbdetect'		:
+		case 'phpvers'		:	$title	=	t( 'intouch.syscheck.tbldata.env.' . $this->_name );		break;
+		case 'apiurl'		:
+		case 'apifound'		:
+		case 'token'		:
+		case 'tokenauth'	:	$title	=	t( 'intouch.syscheck.tbldata.api.' . $this->_name );		break;
+		default : // Assume files
+			$title	=	$this->_name;
+			endswitch;
+
+			$this->title	=	$title;
+	}
+
+
+	/**
+	 * Method to set the value of the object
+	 * @access		public
+	 * @version		@fileVers@
+	 *
+	 * @since		2.6.07
+	 */
+	public function setValue()
+	{
+		$this->value	=	(object) array(
+				'text'	=>	$this->_getValue(),
+				'type'	=>	$this->_getValuetype(),
+		);
+	}
+
+
+	/**
+	 * Method to get the help based on our object
+	 * @access		private
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	private function _getHelp()
+	{
+		switch ( $this->_name ) :
+		case 'template'		:	return t( 'intouch.syscheck.' . ( $this->_value == 1 ? 'general.supported.yes' : ( $this->_value == 0 ? 'genera.supported.no' : 'template.info' ) ) );
+		case 'templatesupported'		:	return t( 'intouch.syscheck.' . ( $this->_value == 1 ? 'general.supported.yes' : ( $this->_value == 0 ? 'genera.supported.no' : 'templatesupported.info' ) ) );
+		case 'version'		:	return t( 'intouch.syscheck.general.supported.' . ( $this->_value === true ? 'yes' : 'no' ) );
+		case 'apifound'		:
+		case 'tokenauth'	:	return ( $this->_value !== true ? t( 'intouch.syscheck.' . $this->_name . '.help', $this->_value ) : null );
+		case 'urlproper'	:
+		case 'curl'			:
+		case 'iconv'		:
+		case 'mbdetect'		:
+		case 'apiurl'		:
+		case 'sslenabled'	:
+		case 'templatesupported' :
+		case 'token'		:	return (! $this->_value ? t( 'intouch.syscheck.' . $this->_name . '.help' ) : null );
+		endswitch;
+
+		if ( $this->_file && ! $this->_value ) {
+			return $this->value->text;
+		}
+	}
+
+
+	/**
+	 * Method to get the help type based on our object
+	 * @access		private
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	private function _getHelptype()
+	{
+		switch( $this->_name ) :
+		case 'template'		:	return ( $this->_value == 1 ? 'label-success' : ( $this->_value == 0 ? 'alert-danger' : 'alert-info' ) );
+		case 'templatesupported' :	return ( $this->_value == 1 ? 'label-success' : ( $this->_value == 0 ? 'alert-danger' : 'alert-info' ) );
+		case 'version'		:	return ( $this->_value === true ? 'label-success' : 'alert-warning' );
+		case 'urlproper'	:
+		case 'curl'			:
+		case 'iconv'		:
+		case 'mbdetect'		:
+		case 'apiurl'		:
+		case 'templatesupported' :
+		case 'sslenabled'	:
+		case 'token'		:	return (! $this->_value ? 'attention' : null );
+		endswitch;
+
+		if ( $this->_file && ! $this->_value ) {
+			return 'text-error';
+		}
+	}
+
+
+	/**
+	 * Method to get the value based on our object
+	 * @access		private
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	private function _getValue()
+	{
+		switch ( $this->_name ) :
+		case 'template' :
+		case 'templatesupported' :
+			return ucfirst( $this->_text );
+		case 'urlproper' :
+		case 'curl' :
+		case 'iconv' :
+		case 'mbdetect' :
+		case 'apiurl' :
+		case 'token' :
+		case 'apifound' :
+		case 'tokenauth' :
+			return t( 'intouch.syscheck.general.yesno.' . ( $this->_value === true ? 'yes' : 'no' ) );
+		case 'sslenabled' :
+			return t( 'intouch.syscheck.general.yesno.' . ( in_array( $this->_value, array( true, null ) ) ? 'yes' : 'no' ) );
+		case 'phpvers' :
+		default :
+			return $this->_text;
+			endswitch;
+	}
+
+
+	/**
+	 * Method to get the type of value we are using
+	 * @access		private
+	 * @version		@fileVers@
+	 *
+	 * @return		string
+	 * @since		2.6.07
+	 */
+	private function _getValuetype()
+	{
+		$type	=	'text';
+
+		switch ( $this->_name ) :
+		case 'urlproper' :
+		case 'curl' :
+		case 'iconv' :
+		case 'mbdetect' :
+		case 'apiurl' :
+		case 'token' :
+		case 'apifound' :
+		case 'tokenauth' :
+			$type	=	'badge';
+			break;
+		case 'sslenabled' :
+			$type	=	'sslbadge';
+			break;
+		endswitch;
+
+			if ( $this->file ) $type	=	'badge';
+
+			return $type;
 	}
 }

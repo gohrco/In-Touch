@@ -67,41 +67,13 @@ class IntouchUpdatesDunModule extends IntouchAdminDunModule
 	{
 		load_bootstrap( 'intouch' );
 		
-		$data	= $this->buildBody();
-		
-		return parent :: render( $data );
-	}
-	
-	
-	/**
-	 * Builds the body of the action
-	 * @access		public
-	 * @version		@fileVers@
-	 * 
-	 * @return		string containing html formatted output
-	 * @since		2.0.0
-	 */
-	public function buildBody()
-	{
 		$doc	=	dunloader( 'document', true );
 		$doc->addStylesheet( get_baseurl( 'intouch' ) . 'assets/updates.css' );
 		$doc->addScript( get_baseurl( 'intouch' ) . 'assets/updates.js' );
 		$doc->addScriptDeclaration( "jQuery.ready( checkForUpdates() );" );
 		
-		$data	=	array();
-		$data[]	=	'<div class="span8" style="text-align: center; ">';
-		$data[]	=	'<a class="btn" id="btn-updates">';
-		$data[]	=	'<div class="ajaxupdate ajaxupdate-init">';
-		$data[]	=	'<span id="upd-title"></span>';
-		$data[]	=	'<img id="img-updates" class="" />';
-		$data[]	=	'<span id="upd-subtitle"></span>';
-		$data[]	=	'</div>';
-		$data[]	=	'</a>';
-		$data[]	=	'</div>';
-		$data[]	=	'<input type="hidden" id="btntitle" value="' . t( 'intouch.updates.checking.title' ) . '" />';
-		$data[]	=	'<input type="hidden" id="btnsubtitle" value="' . t( 'intouch.updates.checking.subtitle' ) . '" />';
-		$data[]	=	'<input type="hidden" id="intouchurl" value="' . get_baseurl( 'intouch' ) . '" />';
+		$views		=	dunloader( 'views', 'intouch' );
 		
-		return implode( "\r\n", $data );
+		return parent :: render( $views->render( 'updates' ) );
 	}
 }
