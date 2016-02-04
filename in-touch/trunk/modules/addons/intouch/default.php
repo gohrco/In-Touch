@@ -47,32 +47,10 @@ class IntouchDefaultDunModule extends IntouchAdminDunModule
 		$doc->addStyleDeclaration( "#intouch .row .well-small h3 {margin: 0; padding: 0; }" );
 		$doc->addStyleDeclaration( "#intouch .icon-hang {margin-left: -20px; }" );
 		
-		$data	= $this->buildBody();
+		$views	=	dunloader( 'views', 'intouch' );
+		$views->setData( array( 'widgets' => $this->_getWidgets() ) );
 		
-		return parent :: render( $data );
-	}
-	
-	
-	/**
-	 * Builds the body of the action
-	 * @access		public
-	 * @version		@fileVers@
-	 *
-	 * @return		string containing html formatted output
-	 * @since		2.0.0
-	 */
-	public function buildBody()
-	{
-		$widgets	=	$this->_getWidgets();
-		$data		=	'<div class="row">'
-					.	'	<div class="well span8">'
-					.	'		' . t( 'intouch.admin.default.body' )
-					.	'	</div>'
-					.	'	<div class="span4">'
-					.	'		' . $widgets
-					.	'	</div>'
-					.	'</div>';
-		return $data;
+		return parent :: render( $views->render( 'dashboard' ) );
 	}
 	
 	
@@ -150,17 +128,18 @@ class IntouchDefaultDunModule extends IntouchAdminDunModule
 	 */
 	private function _getWidgets( $widget = 'all' )
 	{
-		$widgets	=	array( 'status', 'updates', 'license', 'likeus' );
-		$data		=	null;
-		
 		if ( $widget == 'all' ) {
-			foreach ( $widgets as $widget ) {
-				$data	.= $this->_getWidgets( $widget );
+			$data	=	new stdClass;
+			
+			foreach ( array( 'status', 'updates', 'license', 'likeus' ) as $widget ) {
+				$data->$widget	= $this->_getWidgets( $widget );
 			}
+			
 			return $data;
 		}
 		
-		$result	= (object) array( 'status' => null, 'header' => null, 'body' => null );
+		$data			=	null;
+		$result			= (object) array( 'status' => null, 'header' => null, 'body' => null );
 		$result->header = t ( 'intouch.admin.widget.header.' . $widget );
 		
 		switch ( $widget ) {
@@ -211,11 +190,6 @@ class IntouchDefaultDunModule extends IntouchAdminDunModule
 				break;
 		}
 		
-		$data	=	'<div class="well well-small alert' . $result->status . '">'
-				.	'	<h3>' . $result->header . '</h3>'
-				.	'	' . $result->body
-				.	'</div>';
-		
-		return $data;
+		return $result;
 	}
 }

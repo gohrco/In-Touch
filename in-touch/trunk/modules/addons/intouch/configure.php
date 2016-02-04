@@ -66,21 +66,6 @@ class IntouchConfigureDunModule extends IntouchAdminDunModule
 	 */
 	public function render( $data = null )
 	{
-		$data	= $this->buildBody();
-		return parent :: render( $data );
-	}
-	
-	
-	/**
-	 * Builds the body of the action
-	 * @access		public
-	 * @version		@fileVers@
-	 * 
-	 * @return		string containing html formatted output
-	 * @since		2.0.0
-	 */
-	public function buildBody()
-	{
 		$form	=	dunloader( 'form', true );
 		$db		=	dunloader( 'database', true );
 		
@@ -90,16 +75,10 @@ class IntouchConfigureDunModule extends IntouchAdminDunModule
 		
 		// Set the values up
 		foreach ( $results as $result ) $values[$result->key] = $result->value;
-		$fields = $form->setValues( $values, 'intouch.config' );
 		
-		$data	=	'<form action="addonmodules.php?module=intouch&action=configure&task=save" class="form-horizontal" method="post">'
-		.		$this->renderForm( $fields )
-		.		'<div class="form-actions">'
-		.			$form->getButton( 'submit', array( 'class' => 'btn btn-primary span2', 'value' => t( 'intouch.form.submit' ), 'name' => 'submit' ) )
-		.			$form->getButton( 'reset', array( 'class' => 'btn span2', 'value' => t( 'intouch.form.cancel' ), 'style' => 'margin-left: 15px; ' ) )
-		.		'</div>'
-		.	'</form>';
+		$views	=	dunloader( 'views', 'intouch' );
+		$views->setData( array( 'fields' => $form->setValues( $values, 'intouch.config' ) ) );
 		
-		return $data;
+		return parent :: render( $views->render( 'configure' ) );
 	}
 }

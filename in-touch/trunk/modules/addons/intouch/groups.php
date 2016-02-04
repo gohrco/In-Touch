@@ -182,66 +182,30 @@ class IntouchGroupsDunModule extends IntouchAdminDunModule
 				else {
 					$form->setItem( 'invoicelegalfooter', false, 'intouch.group', 'enable' );
 					$form->setItem( 'quotelegalfooter', false, 'intouch.group', 'enable' );
-					
-					$doc	=	dunloader( 'document', true );
-					$doc->addScriptDeclaration( <<< JS
-
-JS
-							);
 				}
 				
-				$fields = $form->setValues( $group, 'intouch.group' );
-				
-				$uri	=	DunUri :: getInstance( 'SERVER', true );
-				$uri->delVars();
-				$uri->setVar( 'module', 'intouch' );
-				$uri->setVar( 'action', 'groups' );
-				
-				$data	=	'<form action="addonmodules.php?module=intouch&action=groups&task=save" class="form-horizontal" method="post">'
-						.		$this->renderForm( $fields )
-						.		'<div class="form-actions">'
-						.			$form->getButton( 'submit', array( 'class' => 'btn btn-primary span2', 'value' => t( 'intouch.form.submit' ), 'name' => 'submit' ) )
-						.			$form->getButton( 'reset', array( 'class' => 'btn span2', 'value' => t( 'intouch.form.reset' ), 'style' => 'margin-left: 15px; ' ) )
-						.			'<a href="' . $uri->toString() . '" class="btn pull-right span2">' . t( 'intouch.form.close' ) . '</a>'
-						.		'</div>'
-						.	'</form>';
-				
 				$this->_handleHiddenWysiwyg();
+				
+				$views	=	dunloader( 'views', 'intouch' );
+				$views->setData( array( 'fields' => $form->setValues( $group, 'intouch.group' ) ) );
+				
+				return $views->render( 'groups.edit' );
 				
 				break;
 			// Default task
 			default:
 			case 'default':
 				
+				// Select all client groups
 				$db->setQuery( "SELECT `id`, `groupname` FROM `tblclientgroups`");
 				$groups	= $db->loadAssocList( 'id' );
 				$groups[0]['groupname']	= 'No Group';
 				
+				// Select all InTouch groups
 				$db->setQuery( "SELECT i.id, i.name, i.active, i.group FROM `mod_intouch_groups` i ORDER BY `name`" );
 				$results = $db->loadObjectList();
 				
-				$data	.=	'<div class="pull-right">'
-						.	'	<form action="addonmodules.php?module=intouch&action=groups" class="spanform form-inline" method="post">'
-						.	'			<button type="submit" class="btn btn-success span3 pull-right">' . t( 'intouch.form.button.addnew' ) . '</button>'
-						.	'			<input name="submit" value="1" type="hidden" /><input type="hidden" name="task" value="addnew" />'
-						.	'	</form>'
-						.	'</div>'
-						.	'<div style="clear: both; "> </div>'
-						.	'<table class="table table-bordered table-striped table-hover">'
-						.	'	<thead>'
-						.	'		<tr>'
-						.	'			<th>ID</th>'
-						.	'			<th>Name</th>'
-						.	'			<th>Group</th>'
-						.	'			<th>Active</th>'
-						.	'			<th>Actions</th>'
-						.	'		</tr>'
-						.	'	</thead>'
-						.	'	<tbody>';
-					
-				$modal	= null;
-
-				foreach ( $results as $row ) {
+				foreach ( $results as &$row ) {
 					
 					// Build our group name
 					if ( strpos( $row->group, '|' ) !== false ) {
@@ -250,11 +214,13 @@ JS
 						foreach ( $grps as $grp ) {
 							$groupname[] = $groups[$grp]['groupname'];
 						}
-						$groupname	=	implode( ', ', $groupname );
+						$groups[$row->group]['groupname']	=	implode( ', ', $groupname );
 					}
 					else {
 						$groupname	= $groups[$row->group]['groupname'];
 					}
+					
+					$row->groupname	=	$groupname;
 					
 					// Set Modal
 					$this->setModal(	'deleteGroup' . $row->id,
@@ -264,37 +230,13 @@ JS
 										'addonmodules.php?module=intouch&action=groups&task=delete&gid=' . $row->id,
 										t( 'intouch.form.delete' )
 							 );
-					
-					$status	=	( $row->active ? 'success' : 'error' );
-					$label	=	( $row->active ? 'success' : 'important' );
-					
-					$axns	=	'<a href="addonmodules.php?module=intouch&action=groups&task=edit&gid=' . $row->id . '" class="btn btn-primary btn-mini span1">' . t( 'intouch.form.edit' ) . '</a>'
-							.	'<a class="btn btn-danger btn-mini span1" href="#deleteGroup' . $row->id . '" data-toggle="modal">' . t( 'intouch.form.delete' ) . '</a>';
-				
-					$data	.=	'		<tr class="' . $status . '">'
-							.	'			<td>' . $row->id . '</td>'
-							.	'			<td>' . $row->name . '</td>'
-							.	'			<td>' . $groupname . '</td>'
-							.	'			<td>'
-							.	'				<span class="label label-' . $label . '">' . t( 'intouch.admin.list.status.' . $status ) . '</span>'
-							.	'			</td>'
-							.	'			<td class="span4">' . $axns . '</td>'
-							.	'		</tr>';
 				}
 					
-				$data	.=	'	</tbody>'
-						.	'</table>';
 				
-				$data	.=	'<div id="test" style="display: none;">Hi Im a test</div>';
-				$data	.= '<script>$("#testme").click( function() { $("#myModal").modal(\'show\'); });</script>';
+				$views	=	dunloader( 'views', 'intouch' );
+				$views->setData( array( 'rows' => $results ) );
 				
-				$js = <<< JS
-$( '#myModal' ).modal({show: false,backdrop: true });
-JS;
-				
-				$doc = dunloader( 'document', true );
-				
-				//$doc->addScriptDeclaration( $js );
+				return $views->render( 'groups.default' );
 				
 			break;
 			// End Task Switch;

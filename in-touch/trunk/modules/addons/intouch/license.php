@@ -67,22 +67,6 @@ class IntouchLicenseDunModule extends IntouchAdminDunModule
 	 */
 	public function render( $data = null )
 	{
-		$data	= $this->buildBody();
-		
-		return parent :: render( $data );
-	}
-	
-	
-	/**
-	 * Builds the body of the action
-	 * @access		public
-	 * @version		@fileVers@
-	 * 
-	 * @return		string containing html formatted output
-	 * @since		2.0.0
-	 */
-	public function buildBody()
-	{
 		$form	=	dunloader( 'form', true );
 		$lic	=	dunloader( 'license', 'intouch' );
 		$parts	=	$lic->getItems();
@@ -128,14 +112,9 @@ class IntouchLicenseDunModule extends IntouchAdminDunModule
 		// Grab the fields
 		$fields = $form->loadForm( 'license', 'intouch' );
 		
-		$data	=	'<form action="addonmodules.php?module=intouch&action=license&task=save" class="form-horizontal" method="post">'
-		.		$this->renderForm( $fields )
-		.		'<div class="form-actions">'
-		.			$form->getButton( 'submit', array( 'class' => 'btn btn-primary span2', 'value' => t( 'intouch.form.submit' ), 'name' => 'submit' ) )
-		.			$form->getButton( 'reset', array( 'class' => 'btn span2', 'value' => t( 'intouch.form.cancel' ), 'style' => 'margin-left: 15px;' ) )
-		.		'</div>'
-		.	'</form>';
+		$views	=	dunloader( 'views', 'intouch' );
+		$views->setData( array( 'fields' => $fields ) );
 		
-		return $data;
+		return parent :: render( $views->render( 'license' ) );
 	}
 }
