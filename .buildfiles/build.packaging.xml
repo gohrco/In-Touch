@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="In Touch Packaging" basedir=".">
+	
+	<property name="dunamis.path" value="c:\Users\Steven\workspace\Dunamis-Packaging\" />
+	<property name="copy.select" value="All" />
+	<property name="copy.destination" value="mods" />
+	
+	<import file="build.xml" />
+	
+	<target name="package_project" depends="build_project">
+			<echo message="=====================================================" />
+			<echo message="Begin Packaging Project" />
+			<echo message="=====================================================" />
+		<antcall target="packaging_all" />
+			<echo message="=====================================================" />
+			<echo message="Completed Packaging Project" />
+			<echo message="=====================================================" />
+	</target>
+</project> 

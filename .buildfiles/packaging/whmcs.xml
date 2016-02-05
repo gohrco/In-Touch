@@ -2,8 +2,6 @@
 
 <project name="Packaging - WHMCS" basedir=".">
 	
-	<import file="../includes.xml" />
-	
 	<target name="package_whmcs" depends="properties,dunamis_properties">
 		
 		<fileset dir="${src.build}/" id="whmcsfiles">

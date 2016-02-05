@@ -2,6 +2,9 @@
 
 <project name="Builder" basedir="." default="build_project">
 	
+	<property name="config.global" location=".buildfiles/config.global" />
+	<property file="${config.global}" prefix="global" />
+	
 	<import file="includes.xml" />
 	
 	<target name="build_project" depends="properties">

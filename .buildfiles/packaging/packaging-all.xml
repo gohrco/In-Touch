@@ -2,14 +2,12 @@
 
 <project name="Packaging" basedir=".">
 	
-	<import file="../includes.xml" />
-	
 	<!-- Include individual files now -->
 	<import file="whmcs.xml" />
 	
-	<target name="packaging_all" depends="properties">
+	<target name="packaging_all" depends="properties,dunamis_properties">
 		
-		<build_changelog />
+		<build_changelog checkfile=".buildfiles/config.project" logpath=".buildfiles/changelog" />
 		
 			<echo message=" " />
 			<echo message="Begin Packaging WHMCS Themer" />
@@ -21,8 +19,8 @@
 			<echo message=" " />
 			<echo message=" " />
 			
-		<clean_changelog />
-		<create_release />
+		<clean_changelog logpath=".buildfiles/changelog" />
+		<create_release thisrelease=".buildfiles/releases/RELEASE-${project.VERSION}" />
 		
 	</target>
 	

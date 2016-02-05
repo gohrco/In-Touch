@@ -2,8 +2,6 @@
 
 <project name="Module:  Build All" basedir=".">
 	
-	<import file="../includes.xml" />
-	
 	<target name="build_all" depends="properties">
 			
 			<echo message=" " />
