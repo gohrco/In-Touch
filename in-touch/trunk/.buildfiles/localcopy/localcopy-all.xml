@@ -2,9 +2,6 @@
 
 <project name="Module: Copy All" basedir=".">
 	
-	<import file="../includes.xml" />
-	<import file="../../../Dunamis Framework/.buildfiles/dunamis.xml" />
-	
 	<!-- Include individual files now -->
 	<import file="whmcs.xml" />
 	

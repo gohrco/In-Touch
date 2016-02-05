@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="In Touch Localcopy" basedir=".">
+	
+	<property name="dunamis.path" value="c:\Users\Steven\workspace\Dunamis-1.5-Localcopy\" />
+	<property name="copy.select" value="All" />
+	<property name="copy.destination" value="mods" />
+	<import file="build.xml" />
+	
+	<target name="copy_project" depends="build_project">
+			<echo message="=====================================================" />
+			<echo message="Begin Copying Project" />
+			<echo message="=====================================================" />
+		
+		<antcall target="copy_all" />
+		<antcall target="dunamis_copy_all" />
+		
+			<echo message="=====================================================" />
+			<echo message="Completed Copying Project" />
+			<echo message="=====================================================" />
+	</target>
+	
+</project> 

@@ -2,8 +2,6 @@
 
 <project name="Module:  Document All" basedir=".">
 	
-	<import file="../includes.xml" />
-	
 	<target name="document_all" depends="properties">
 			
 			<echo message=" " />

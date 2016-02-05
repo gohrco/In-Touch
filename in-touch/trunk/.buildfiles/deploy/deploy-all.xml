@@ -2,8 +2,6 @@
 
 <project name="Module:  Deploy All" basedir=".">
 	
-	<import file="../includes.xml" />
-	
 	<target name="deploy_all" depends="properties">
 			
 			<echo message=" " />

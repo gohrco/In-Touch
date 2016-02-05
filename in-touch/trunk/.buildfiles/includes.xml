@@ -6,23 +6,23 @@
 	<target name="properties" depends="property_files,
 		properties_system" />
 	
+	<property name="config.local" location=".buildfiles/config.local" />
+	<property file="${config.local}" prefix="local" />
+	
+	<property name="config.project" location=".buildfiles/config.project" />
+	<property file="${config.project}" prefix="project" />
+	
+	<property name="config.jira" location=".buildfiles/config.jira" />
+	<property file="${config.jira}" prefix="jira" />
+	
 	<!-- Function Import -->
-	<import file="functions/import_all.xml" />
+	<import file="${global.ANTFILES}includes.xml" />
 	
 	<!-- Properties Import -->
 	<import file="system.xml" />
 	
 	<!-- File Import -->
 	<target name="property_files">
-		
-		<property name="config.local" location="config.local" />
-		<property file="${config.local}" prefix="local" />
-		
-		<property name="config.project" location="config.project" />
-		<property file="${config.project}" prefix="project" />
-		
-		<property name="config.jira" location="config.jira" />
-		<property file="${config.jira}" prefix="jira" />
 		
 	</target>
 	
@@ -40,5 +40,8 @@
 	
 	<!-- Import Document Files -->
 	<import file="document/document-all.xml" />
+	
+	<!-- Dunamis Import -->
+	<import file="${dunamis.path}.buildfiles\dunamis.xml" />
 	
 </project>

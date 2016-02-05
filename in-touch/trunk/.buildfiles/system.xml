@@ -17,8 +17,6 @@
 		<!-- Copy Level Properties -->
 		<property name="local.whmcs" value="${local.LOCATION_LOCALHOME}whmcs/" />
 		
-		<!-- Packaging Level Properties -->
-		
 	</target>
 	
 </project>
