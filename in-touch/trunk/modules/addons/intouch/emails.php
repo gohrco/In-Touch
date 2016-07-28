@@ -937,7 +937,7 @@ STRING;
 				$new_password	= $this->_generateRandom( 8 );
 				
 				$file			=	get_filename();
-				$iscontact		=	$file == 'clientssummary' ? false : true;
+				$iscontact		=	$file == 'clientssummary' || $file == 'clientsprofile' ? false : true;
 				$clientid		=	$input->getVar( 'userid' );
 				
 				// WHMCS v5.0 / 5.1 / 5.2 do not permit contact intercepts
